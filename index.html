@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang='pt-br'>
+<head>
+    <meta charset='UTF-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <link rel='preconnect' href='https://fonts.googleapis.com' />
+    <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin='crossorigin' />
+    <link href='https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap' rel='stylesheet' />
+    <link href="https://fonts.googleapis.com/css2?family=Rock+3D&display=swap" rel="stylesheet" />
+    <link rel='stylesheet' type='text/css' href='./styles/main.css' />
+    <link rel='icon' type='image/svg+xml' href='./medias/icons/quizmemore.svg' />
+    <title>QUIZmeMORE</title>
+    <meta name='description' content='Make a quiz and share it' />
+    <meta name='keywords' content='quiz me more, quizzes, questions' />
+    <meta name='author' content='github.com/morenoalan' />
+</head>
+<body>
+    <noscript>
+		<br />
+		You need to enable JavaScript to run this app.<br />
+        Você precisa ativar o JavaScript para executar esta aplicação.<br />
+		<br />
+    </noscript>
+    <header>
+        <figure>
+            <figcaption>QUIZmeMORE</figcaption>
+        </figure>
+    </header>
+    <main>
+        <section id='screen-overture' class='screen-overture screen-scroll display-none'>
+            <form action='/upload' method='post' enctype='multipart/form-data'>
+                <input type='file' name='fileToUpload' id='fileToUpload'>
+                <input type='submit' value='Abrir' name='submit'>
+            </form>
+            <button>Abrir</button>
+            <button>Editar</button>
+        </section>
+        <section id='screen-editor' class='screen-editor screen-scroll display-active'>
+            <div class='screen-editor-content screen-scroll'>
+                <div class='menu-editor-top'>
+                    <p class='menu-editor-top-address'>./nome-de-arquivo-bem-grande.json</p>
+                    <div class='menu-editor-top-buttons'>
+                        <button onclick='readFile();'>V</button>
+                        <button onclick='saveFile();'>S</button>
+                        <button onclick='shareFile();'>C</button>
+                    </div>
+                </div>
+                <form class='screen-editor-form'>
+                    <input type='text' placeholder='Origem' class='answer-field'/>
+                    <input type='text' placeholder='Tópico' class='answer-field'/>
+                    <div role='textbox' placeholder='Questão' class='answer-field div-field screen-scroll' contenteditable='true'></div>
+                    <div class='group-input-answer'>
+                        <input type='checkbox' class='answer-checkbox'>
+                        <input type='text' placeholder='Resposta' class='answer-field'/>
+                        <button class='delete-answer' onclick='deleteAnswer(this);'>×</button>
+                    </div>
+                    <div class='group-input-answer'>
+                        <input type='checkbox' class='answer-checkbox'>
+                        <input type='text' placeholder='Resposta' class='answer-field'/>
+                        <button class='delete-answer' onclick='deleteAnswer(this);'>×</button>
+                    </div>
+                    <div class='group-input-answer'>
+                        <input type='checkbox' class='answer-checkbox'>
+                        <input type='text' placeholder='Resposta' class='answer-field'/>
+                        <button class='delete-answer' onclick='deleteAnswer(this);'>×</button>
+                    </div>
+                    <div class='group-input-answer'>
+                        <input type='checkbox' class='answer-checkbox'>
+                        <input type='text' placeholder='Resposta' class='answer-field'/>
+                        <button class='delete-answer' onclick='deleteAnswer(this);'>×</button>
+                    </div>
+                    <button class='add-answer' onclick='addAnAnswer(this);'>+</button>
+                    <div role='textbox' placeholder='Dica (antes da resposta)' class='answer-field div-field screen-scroll' contenteditable='true'></div>
+                    <div role='textbox' placeholder='Explicação (depois da resposta)' class='answer-field div-field screen-scroll' contenteditable='true'></div>
+                </form>
+            </div>
+            <div class='menu-editor-bottom'>
+                <button onclick='newForm();'>Novo</button>
+                <button onclick='sendForm();'>Enviar</button>
+            </div>
+        </section>
+        <section id='screen-reader' class='screen-reader screen-scroll display-none'>
+            <p>./arquivo.json</p>
+            <button onclick='downloadFile();'>Baixar</button>
+        </section>
+        <section id='screen-player' class='screen-player screen-scroll display-none'>
+            <div class='status'>
+                <p>Progresso: <span id='status-progress'>1/8</span></p>
+                <p>Acertos: <span id='status-right'>1</span></p>
+                <p>Aproveitamento: <span id='status-percent'>100%</span></p>
+                <p>Cronômetro: <span id='status-timer'>23:59:59</span></p>
+                <button onclick='playAndPause();'>Pausa</button>
+            </div>
+            <div class='cards'>
+                <div id='card1' class='announced'>
+                    <p>Questão <span id='question-number'>1</span>:</p>
+                    <p id='question-text'>Qual o sentido da vida, do universo e tudo mais?</p>
+                    <button class='' oncLick='goToHint();'>Dica</button>
+                    <button class='' onclick='goToExplanation();'>Explicação</button>
+                </div>
+                <div class='answers'>
+                    <p class='answer-option answer-wrong'>Pi</p>
+                    <p class='answer-option'>7</p>
+                    <p class='answer-option'>Número de Euler</p>
+                    <p class='answer-option answer-right'>42</p>
+                </div>
+            </div>
+            <div class='directional-buttons'>
+                <p onclick='goToCardLeft();'><</p>
+                <p onclick='goToCardRight();'>></p>
+            </div>
+        </section>
+    </main>
+    <footer id='footer'>
+		<p><a id='author' href='https://www.github.com/morenoalan' target='_blank'>Alan Moreno</a> <span class='invert-horizontal'>&#169;</span> <span id='copyleft-year'>2024</span> | <a href='https://www.github.com/morenoalan/quizmemore' target='_blank'>Repository</a></p>
+	</footer>
+    <script type='text/javascript' id='script-main' src='./main.js'></script>
+</body>
+</html>
