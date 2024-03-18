@@ -26,7 +26,7 @@
             <figcaption>QUIZmeMORE</figcaption>
         </figure>
     </header>
-    <main>
+    <main id='main'>
         <section id='screen-overture' class='screen-overture screen-scroll display-none'>
             <form action='/upload' method='post' enctype='multipart/form-data'>
                 <input type='file' name='fileToUpload' id='fileToUpload'>
@@ -45,34 +45,35 @@
                         <button onclick='shareFile();'>C</button>
                     </div>
                 </div>
-                <form class='screen-editor-form'>
-                    <input type='text' placeholder='Origem' class='answer-field'/>
-                    <input type='text' placeholder='Tópico' class='answer-field'/>
-                    <div role='textbox' placeholder='Questão' class='answer-field div-field screen-scroll' contenteditable='true'></div>
+                <div class='screen-editor-form'>
+                    <input id='form-field-origin' type='text' placeholder='Origem' class='input-field'/>
+                    <input id='form-field-topic' type='text' placeholder='Tópico' class='input-field'/>
+                    <div id='form-field-question' role='textbox' placeholder='Questão' class='input-field div-field screen-scroll' contenteditable='true'></div>
+                    <p class='span-note'>Marque o(s) checkbox(es) da(s) resposta(s) correta(s).</p>
                     <div class='group-input-answer'>
-                        <input type='checkbox' class='answer-checkbox'>
-                        <input type='text' placeholder='Resposta' class='answer-field'/>
-                        <button class='delete-answer' onclick='deleteAnswer(this);'>×</button>
+                        <input id='form-checkbox-answer-1' type='checkbox' class='answer-checkbox'>
+                        <input id='form-field-answer-1' type='text' placeholder='Resposta' class='input-field answer-field'/>
+                        <button id='form-button-answer-1' class='delete-answer' onclick='deleteAnswer(this);'>×</button>
                     </div>
                     <div class='group-input-answer'>
-                        <input type='checkbox' class='answer-checkbox'>
-                        <input type='text' placeholder='Resposta' class='answer-field'/>
-                        <button class='delete-answer' onclick='deleteAnswer(this);'>×</button>
+                        <input id='form-checkbox-answer-2' type='checkbox' class='answer-checkbox'>
+                        <input id='form-field-answer-2' type='text' placeholder='Resposta' class='input-field answer-field'/>
+                        <button id='form-button-answer-2' class='delete-answer' onclick='deleteAnswer(this);'>×</button>
                     </div>
                     <div class='group-input-answer'>
-                        <input type='checkbox' class='answer-checkbox'>
-                        <input type='text' placeholder='Resposta' class='answer-field'/>
-                        <button class='delete-answer' onclick='deleteAnswer(this);'>×</button>
+                        <input id='form-checkbox-answer-3' type='checkbox' class='answer-checkbox'>
+                        <input id='form-field-answer-3' type='text' placeholder='Resposta' class='input-field answer-field'/>
+                        <button id='form-button-answer-3' class='delete-answer' onclick='deleteAnswer(this);'>×</button>
                     </div>
                     <div class='group-input-answer'>
-                        <input type='checkbox' class='answer-checkbox'>
-                        <input type='text' placeholder='Resposta' class='answer-field'/>
-                        <button class='delete-answer' onclick='deleteAnswer(this);'>×</button>
+                        <input id='form-checkbox-answer-4' type='checkbox' class='answer-checkbox'>
+                        <input id='form-field-answer-4' type='text' placeholder='Resposta' class='input-field answer-field'/>
+                        <button id='form-button-answer-4' class='delete-answer' onclick='deleteAnswer(this);'>×</button>
                     </div>
-                    <button class='add-answer' onclick='addAnAnswer(this);'>+</button>
-                    <div role='textbox' placeholder='Dica (antes da resposta)' class='answer-field div-field screen-scroll' contenteditable='true'></div>
-                    <div role='textbox' placeholder='Explicação (depois da resposta)' class='answer-field div-field screen-scroll' contenteditable='true'></div>
-                </form>
+                    <button id='form-button-add-answer' class='add-answer' onclick='addAnswer();'>+</button>
+                    <div id='form-field-hint' role='textbox' placeholder='Dica (antes da resposta)' class='input-field div-field screen-scroll' contenteditable='true'></div>
+                    <div id='form-field-explanation' role='textbox' placeholder='Explicação (depois da resposta)' class='input-field div-field screen-scroll' contenteditable='true'></div>
+                </div>
             </div>
             <div class='menu-editor-bottom'>
                 <button onclick='newForm();'>Novo</button>
@@ -80,8 +81,17 @@
             </div>
         </section>
         <section id='screen-reader' class='screen-reader screen-scroll display-none'>
-            <p>./arquivo.json</p>
-            <button onclick='downloadFile();'>Baixar</button>
+            <div id='screen-reader-content' class='screen-reader-content'>
+                <div class='menu-editor-top'>
+                    <p class='menu-editor-top-address'>./nome-de-arquivo-bem-grande.json</p>
+                    <div class='menu-editor-top-buttons'>
+                        <button onclick='editObject();'>E</button>
+                        <button onclick='saveFile();'>S</button>
+                        <button onclick='shareFile();'>C</button>
+                    </div>
+                </div>
+                <div id='page-file' class='page-file screen-scroll'></div>
+            </div>
         </section>
         <section id='screen-player' class='screen-player screen-scroll display-none'>
             <div class='status'>

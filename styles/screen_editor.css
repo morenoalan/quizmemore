@@ -3,10 +3,12 @@
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    background: #1c1c1c;
+    background: var(--color-black-89);
     height: 100%;
     width: 100%;
     position: relative;
+    border-top-left-radius: 2rem;
+    border-top-right-radius: 2rem;
 }
 
 .screen-editor-content {
@@ -31,13 +33,13 @@
     width: 85%;
     height: 100%;
     row-gap: 0.5rem;
-    background: red;
+    background: transparent;
 }
 
 .screen-editor-form *::placeholder{
     font-family: 'Roboto', sans-serif;
     font-weight: 500;
-    color: #808080
+    color: var(--color-gray);
 }
 
 .answer-checkbox {
@@ -45,13 +47,14 @@
     width: 1.6rem;
 }
 
-.answer-field {
+.input-field {
     width: 100%;
     border-radius: 0.2rem;
     line-height: 1.6rem;
     font-size: 1rem;
-    font-weight: 600;
+    font-weight: 400;
     padding-left: 0.5rem;
+    background: var(--color-white);
 }
 
 .group-input-answer {
@@ -76,6 +79,7 @@
 .add-answer {
     height: 1.6rem;
     width: 3rem;
+    margin-bottom: 0.5rem;
     border-radius: 0.3rem;
     color: var(--color-white);
     font-size: 1.2rem;
@@ -85,10 +89,9 @@
 
 .screen-editor-form > div:first-of-type {
     width: 100%;
-    /*height: fit-content;*/
+    height: fit-content;
 }
-.screen-editor-form > div > textarea,
-textarea:last-of-type,
+
 .div-field {
     word-break: break-all;
     min-height: 4rem;
@@ -100,15 +103,36 @@ textarea:last-of-type,
     user-select: auto;
     display: inline;
     text-decoration-style: solid;
+    background: var(--color-white);
+    font-weight: 400;
 }
 
-.div-field {
-    background-color: white;
+#form-field-question:empty::before {
+    content: "Questão";
+    color: var(--color-gray);
+    cursor: text;
+    font-weight: 500;
+}
+
+#form-field-hint:empty::before {
+    content: "Dica (antes da resposta)";
+    color: var(--color-gray);
+    cursor: text;
+    font-weight: 500;
+}
+
+#form-field-explanation:empty::before {
+    content: "Explicação (depois da resposta)";
+    color: var(--color-gray);
+    cursor: text;
+    font-weight: 500;
 }
 
 button {
-    box-shadow: 0 0.2rem 0.1rem #585858;
+    box-shadow: 0 0.2rem 0.1rem var(--color-gray-double-beast);
     transition: transform 0.1s ease;
+    color: var(--color-white);
+    font-weight: 600;
 }
 
 button:active {
@@ -116,6 +140,8 @@ button:active {
 }
 
 .menu-editor-top {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -132,13 +158,21 @@ button:active {
 
 .menu-editor-top-address {
     color: var(--color-white);
-    font-weight: 600;
+    font-weight: 500;
     display: inline-block;
     text-align: left;
     flex-grow: 1;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.span-note {
+    align-self: flex-start;
+    justify-self: left;
+    color: var(--color-white);
+    font-size: 0.8rem;
+    font-weight: 500;
 }
 
 .menu-editor-top button {
@@ -167,7 +201,8 @@ button:active {
     position: relative;
     bottom: 0;
     padding-bottom: 0.3rem;
-    background-color:  #1c1c1c;
+    margin-bottom: 0.5rem;
+    background-color:  transparent;
 }
 
 .menu-editor-bottom button {
@@ -184,4 +219,5 @@ button:active {
 .menu-editor-bottom button:nth-of-type(2) {
     background: var(--color-light-green);
     width: 50%;
+    color: var(--color-black-96);
 }
