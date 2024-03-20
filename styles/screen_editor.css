@@ -93,7 +93,7 @@
 }
 
 .div-field {
-    word-break: break-all;
+    word-wrap: break-word;
     min-height: 4rem;
     max-height: 9rem;
     cursor: text;
@@ -128,17 +128,6 @@
     font-weight: 500;
 }
 
-button {
-    box-shadow: 0 0.2rem 0.1rem var(--color-gray-double-beast);
-    transition: transform 0.1s ease;
-    color: var(--color-white);
-    font-weight: 600;
-}
-
-button:active {
-    transform: translateY(0.1rem);
-}
-
 .menu-editor-top {
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
@@ -156,7 +145,7 @@ button:active {
     background-color: transparen
 }
 
-.menu-editor-top-address {
+.menu-editor-file-name {
     color: var(--color-white);
     font-weight: 500;
     display: inline-block;
@@ -171,15 +160,15 @@ button:active {
     align-self: flex-start;
     justify-self: left;
     color: var(--color-white);
-    font-size: 0.8rem;
-    font-weight: 500;
+    font-size: 0.7rem;
+    font-weight: 600;
+    margin-top: 0.3rem;
 }
 
 .menu-editor-top button {
     height: 2.6rem;
     width: 2.6rem;
-    border-radius: 0.5rem;
-    background: #969696;
+    background: var(--color-light-violet);
 }
 
 .menu-editor-top-buttons {
@@ -190,6 +179,10 @@ button:active {
     column-gap: 3%;
 }
 
+.menu-editor-top-buttons > .button {
+    color: var(--color-white);
+}
+
 .menu-editor-bottom {
     display: flex;
     flex-direction: row;
@@ -198,26 +191,27 @@ button:active {
     height: 5.5rem;
     width: 100%;
     column-gap: 3%;
-    position: relative;
-    bottom: 0;
     padding-bottom: 0.3rem;
     margin-bottom: 0.5rem;
-    background-color:  transparent;
+    background-color: transparent;
 }
 
 .menu-editor-bottom button {
+    font-size: 0.85rem;
+    font-weight: 600;
     height: 4rem;
-    border-radius: 0.5rem;
     background: #969696;
 }
 
 .menu-editor-bottom button:nth-of-type(1) {
-    background: var(--color-gray);
+    background: var(--color-light-blue);
+    color: var(--color-white);
     width: 30%;
 }
 
 .menu-editor-bottom button:nth-of-type(2) {
     background: var(--color-light-green);
+    color: var(--color-black-96);
     width: 50%;
     color: var(--color-black-96);
 }

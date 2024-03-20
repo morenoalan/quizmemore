@@ -1,0 +1,44 @@
+.screen-overture {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--color-black-89);
+    height: 100%;
+    width: 100%;
+    position: relative;
+    border-top-left-radius: 2rem;
+    border-top-right-radius: 2rem;
+    row-gap: 1rem;
+    padding-top: 1.5rem;
+}
+
+.overture-button {
+    position: relative;
+    top: 0.2rem;
+    height: 3rem;
+    width: 85%;
+    border-radius: 0.3rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.overture-file-button {
+    background: var(--color-light-red);
+    color: var(--color-black-89);
+}
+
+.overture-player-button {
+    background: var(--color-light-green);
+    color: var(--color-black-89);
+}
+
+.overture-editor-button {
+    background: var(--color-light-blue);
+    color: var(--color-black-89);
+}

@@ -5,8 +5,8 @@
     <meta name='viewport' content='width=device-width, initial-scale=1.0' />
     <link rel='preconnect' href='https://fonts.googleapis.com' />
     <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin='crossorigin' />
+    <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet" />
     <link href='https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap' rel='stylesheet' />
-    <link href="https://fonts.googleapis.com/css2?family=Rock+3D&display=swap" rel="stylesheet" />
     <link rel='stylesheet' type='text/css' href='./styles/main.css' />
     <link rel='icon' type='image/svg+xml' href='./medias/icons/quizmemore.svg' />
     <title>QUIZmeMORE</title>
@@ -23,106 +23,116 @@
     </noscript>
     <header>
         <figure>
-            <figcaption>QUIZmeMORE</figcaption>
+            <figcaption onclick='goToOverture();'>QUIZmeMORE</figcaption>
         </figure>
     </header>
     <main id='main'>
         <section id='screen-overture' class='screen-overture screen-scroll display-none'>
-            <form action='/upload' method='post' enctype='multipart/form-data'>
-                <input type='file' name='fileToUpload' id='fileToUpload'>
-                <input type='submit' value='Abrir' name='submit'>
-            </form>
-            <button>Abrir</button>
-            <button>Editar</button>
+            <label id='file-input-button' for='file-input-field' class='button overture-file-button overture-button'>ESCOLHER ARQUIVO</label>
+            <input type="file" id="file-input-field" accept=".json" class='display-none'>
+            <button onclick='playGame();' class='button overture-player-button overture-button'>JOGAR</button>
+            <button onclick='editObject()' class='button overture-editor-button overture-button'>EDITAR</button>
         </section>
-        <section id='screen-editor' class='screen-editor screen-scroll display-active'>
+        <section id='screen-editor' class='screen-editor screen-scroll display-none'>
             <div class='screen-editor-content screen-scroll'>
                 <div class='menu-editor-top'>
-                    <p class='menu-editor-top-address'>./nome-de-arquivo-bem-grande.json</p>
+                    <p id='menu-editor-file-name' class='menu-editor-file-name'>QUIZmeMORE.json</p>
                     <div class='menu-editor-top-buttons'>
-                        <button onclick='readFile();'>V</button>
-                        <button onclick='saveFile();'>S</button>
-                        <button onclick='shareFile();'>C</button>
+                        <button onclick='readFile();' class='button'><img src='medias/article_FILL0_wght400_GRAD0_opsz24.svg' /></button>
+                        <button onclick='saveFile();' class='button'><img src='medias/download_FILL0_wght400_GRAD0_opsz24.svg' /></button>
                     </div>
                 </div>
                 <div class='screen-editor-form'>
                     <input id='form-field-origin' type='text' placeholder='Origem' class='input-field'/>
                     <input id='form-field-topic' type='text' placeholder='Tópico' class='input-field'/>
                     <div id='form-field-question' role='textbox' placeholder='Questão' class='input-field div-field screen-scroll' contenteditable='true'></div>
-                    <p class='span-note'>Marque o(s) checkbox(es) da(s) resposta(s) correta(s).</p>
+                    <p class='span-note'>MARQUE O(S) CHECKBOX(ES) DA(S) RESPOSTA(S) CORRETA(S).</p>
                     <div class='group-input-answer'>
                         <input id='form-checkbox-answer-1' type='checkbox' class='answer-checkbox'>
                         <input id='form-field-answer-1' type='text' placeholder='Resposta' class='input-field answer-field'/>
-                        <button id='form-button-answer-1' class='delete-answer' onclick='deleteAnswer(this);'>×</button>
+                        <button id='form-button-answer-1' class='delete-answer button' onclick='deleteAnswer(this);'>×</button>
                     </div>
                     <div class='group-input-answer'>
                         <input id='form-checkbox-answer-2' type='checkbox' class='answer-checkbox'>
                         <input id='form-field-answer-2' type='text' placeholder='Resposta' class='input-field answer-field'/>
-                        <button id='form-button-answer-2' class='delete-answer' onclick='deleteAnswer(this);'>×</button>
+                        <button id='form-button-answer-2' class='delete-answer button' onclick='deleteAnswer(this);'>×</button>
                     </div>
                     <div class='group-input-answer'>
                         <input id='form-checkbox-answer-3' type='checkbox' class='answer-checkbox'>
                         <input id='form-field-answer-3' type='text' placeholder='Resposta' class='input-field answer-field'/>
-                        <button id='form-button-answer-3' class='delete-answer' onclick='deleteAnswer(this);'>×</button>
+                        <button id='form-button-answer-3' class='delete-answer button' onclick='deleteAnswer(this);'>×</button>
                     </div>
                     <div class='group-input-answer'>
                         <input id='form-checkbox-answer-4' type='checkbox' class='answer-checkbox'>
                         <input id='form-field-answer-4' type='text' placeholder='Resposta' class='input-field answer-field'/>
-                        <button id='form-button-answer-4' class='delete-answer' onclick='deleteAnswer(this);'>×</button>
+                        <button id='form-button-answer-4' class='delete-answer button' onclick='deleteAnswer(this);'>×</button>
                     </div>
-                    <button id='form-button-add-answer' class='add-answer' onclick='addAnswer();'>+</button>
+                    <button id='form-button-add-answer' class='add-answer button' onclick='addAnswer();'>+</button>
                     <div id='form-field-hint' role='textbox' placeholder='Dica (antes da resposta)' class='input-field div-field screen-scroll' contenteditable='true'></div>
                     <div id='form-field-explanation' role='textbox' placeholder='Explicação (depois da resposta)' class='input-field div-field screen-scroll' contenteditable='true'></div>
                 </div>
             </div>
             <div class='menu-editor-bottom'>
-                <button onclick='newForm();'>Novo</button>
-                <button onclick='sendForm();'>Enviar</button>
+                <button onclick='newForm();' class='button'><img src='medias/delete_FILL0_wght400_GRAD0_opsz24.svg' /></button>
+                <button onclick='sendForm();' class='button'><img src='medias/\send_FILL0_wght400_GRAD0_opsz24.svg' /></button>
             </div>
         </section>
         <section id='screen-reader' class='screen-reader screen-scroll display-none'>
             <div id='screen-reader-content' class='screen-reader-content'>
                 <div class='menu-editor-top'>
-                    <p class='menu-editor-top-address'>./nome-de-arquivo-bem-grande.json</p>
+                    <p id='menu-reader-file-name' class='menu-reader-file-name' onblur="setFileName(this.textContent);" contenteditable='true'>QUIZmeMORE.json</p>
                     <div class='menu-editor-top-buttons'>
-                        <button onclick='editObject();'>E</button>
-                        <button onclick='saveFile();'>S</button>
-                        <button onclick='shareFile();'>C</button>
+                        <button onclick='editObject();'  class='button'><img src='medias/add_box_FILL0_wght400_GRAD0_opsz24.svg' /></button>
+                        <button onclick='saveFile();' class='button'><img src='medias/download_FILL0_wght400_GRAD0_opsz24.svg' /></button>
                     </div>
                 </div>
                 <div id='page-file' class='page-file screen-scroll'></div>
             </div>
         </section>
-        <section id='screen-player' class='screen-player screen-scroll display-none'>
-            <div class='status'>
-                <p>Progresso: <span id='status-progress'>1/8</span></p>
-                <p>Acertos: <span id='status-right'>1</span></p>
-                <p>Aproveitamento: <span id='status-percent'>100%</span></p>
-                <p>Cronômetro: <span id='status-timer'>23:59:59</span></p>
-                <button onclick='playAndPause();'>Pausa</button>
-            </div>
-            <div class='cards'>
-                <div id='card1' class='announced'>
-                    <p>Questão <span id='question-number'>1</span>:</p>
-                    <p id='question-text'>Qual o sentido da vida, do universo e tudo mais?</p>
-                    <button class='' oncLick='goToHint();'>Dica</button>
-                    <button class='' onclick='goToExplanation();'>Explicação</button>
+        <section id='screen-player' class='screen-player screen-scroll display-active'>
+            <div class='screen-player-content screen-scroll'>
+                <div class='player-status'>
+                    <div class='player-status-info'>
+                        <div class='player-status-right'>
+                            <p class='player-status-data'>ACERTOS: <span id='status-score'>1</span></p>
+                            <p class='player-status-data'>PROGRESSO: <span id='status-progress'>2/10 </span></p>
+                            <p class='player-status-data'>APROVEITAMENTO: <span id='status-percent'>100%</span></p>
+                        </div>
+                        <button class='button play-pause-button' onclick='playAndPause();'><p id='status-timer'>01:23</p><img src='medias/play_pause_FILL0_wght400_GRAD0_opsz24.svg' /></button>
+                    </div>
+                    <div class='status-progress-bar'>
+                        <div class='status-progress-bar-blue'></div>
+                    </div>
                 </div>
-                <div class='answers'>
-                    <p class='answer-option answer-wrong'>Pi</p>
-                    <p class='answer-option'>7</p>
-                    <p class='answer-option'>Número de Euler</p>
-                    <p class='answer-option answer-right'>42</p>
+                <div class='deck-table screen-scroll'>
+                    <p class='card-info-topic'>TÓPICO: <span>Cultura pop</span></p>
+                    <p id='question-card' class='question-card '>Qual o sentido da vida, do universo e tudo mais?</p>
+                    <div id='answers-deck' class='answers-deck'>
+                        <p class='answer-card answer-wrong' onclick='pickCard(this);' value='0'><span class='single-answer'><span></span></span>Comer, rezar e amar</p>
+                        <p class='answer-card answer-normal' onclick='pickCard(this);' value='0'><span class='single-answer'><span></span></span>Reproduzir e passar o conhecimento</p>
+                        <p class='answer-card answer-normal' onclick='pickCard(this);' value='0'><span class='single-answer'><span></span></span>42</p>
+                        <p class='answer-card answer-right' onclick='pickCard(this);' value='0'><span class='single-answer'><span></span></span>Sexo, drogas e rock'n'roll</p>
+                    </div>
+                    <p class='card-info-origin'>ORIGEM: <span>Douglas Addams</span></p>
                 </div>
             </div>
-            <div class='directional-buttons'>
-                <p onclick='goToCardLeft();'><</p>
-                <p onclick='goToCardRight();'>></p>
+            <div class='menu-player-bottom'>
+                <div class='menu-player-hint-confirm'>
+                    <button class='button hint-button' oncLick='goToHint();'><img src='medias/lightbulb_FILL0_wght400_GRAD0_opsz24.svg'/></button>
+                    <button class='button confirm-button' oncLick='confirmQuestion();'><img src='medias/send_FILL0_wght400_GRAD0_opsz24.svg' /></button>
+                </div>
+                <div class='directional-buttons-panel'>
+                    <button class='button directional-button' onclick='goToCardFirst();'><img src='medias/first_page_FILL0_wght400_GRAD0_opsz24.svg' /></button>
+                    <button class='button directional-button' onclick='goToCardBefore();'><img src='medias/navigate_before_FILL0_wght400_GRAD0_opsz24.svg' /></button>
+                    <button class='button directional-button' onclick='moveCardToLast();'><img src='medias/move_up_FILL0_wght400_GRAD0_opsz24.svg' style='transform: rotate(90deg);' /></button>
+                    <button class='button directional-button' onclick='goToCardNext();'><img src='medias/navigate_next_FILL0_wght400_GRAD0_opsz24.svg' /></button>
+                    <button class='button directional-button' onclick='goToCardLast();'><img src='medias/last_page_FILL0_wght400_GRAD0_opsz24.svg' /></button>
+                </div>
             </div>
         </section>
     </main>
     <footer id='footer'>
-		<p><a id='author' href='https://www.github.com/morenoalan' target='_blank'>Alan Moreno</a> <span class='invert-horizontal'>&#169;</span> <span id='copyleft-year'>2024</span> | <a href='https://www.github.com/morenoalan/quizmemore' target='_blank'>Repository</a></p>
+		<p><a id='author' href='https://alinktree.blogspot.com' target='_blank'>Alan Moreno</a> <span class='invert-horizontal'>&#169;</span> <span id='copyleft-year'>2024</span> | <a href='https://www.github.com/morenoalan/quizmemore' target='_blank'>Repository</a></p>
 	</footer>
     <script type='text/javascript' id='script-main' src='./main.js'></script>
 </body>

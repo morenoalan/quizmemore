@@ -21,6 +21,23 @@
     position: relative;
 }
 
+.menu-reader-file-name {
+    color: var(--color-black-96);
+    background-color: var(--color-white);
+    border-radius: 0.2rem;
+    font-size: 1rem;
+    padding-left: 0.5rem;
+    line-height: 1.6rem;
+
+    font-weight: 500;
+    display: inline-block;
+    text-align: left;
+    flex-grow: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .page-file {
     display: flex;
     flex-direction: column;
@@ -35,10 +52,20 @@
     overflow-y: scroll;
 }
 
+.page-file-button-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    height: fit-content;
+    width: 100%;
+}
+
 .page-file-button {
     cursor: pointer;
     width: 100%;
-    word-break: break-word;
+    word-wrap: break-word;
 }
 
 .page-file-button:hover {
