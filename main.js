@@ -1,35 +1,76 @@
 //LocalStorage
-// Salvar uma variável no localStorage
-const minhaVariavel = 'Olá, mundo!';
-localStorage.setItem('minhaChave', minhaVariavel);
-
-// Obter uma variável do localStorage
-const variavelSalva = localStorage.getItem('minhaChave');
-
-console.log(variavelSalva); // Saída: Olá, mundo!
-
+function handleLocalStorage(method, key, value){
+    switch(method) {
+        case 'get':
+            localStorage.getItem(key);
+            break;
+        case 'set':
+            localStorage.setItem(key, value);
+            break;
+        case 'remove':
+            localStorage.removeItem(key);
+            break;
+        case 'clear':
+            localStorage.clear();
+            break;
+        default:
+            console.log(localStorage);
+    }
+}
 
 // General variables
+
 let jsonFile;
 let database = [];
 let filePaths = [];
+
+// global functions
+
+function addElementHTML(place, method, element){
+    let setPlace = place;
+    let setMethod = method;
+    let setElement = element;
+    setPlace.insertAdjacentHTML(setMethod, setElement);
+}
+
+function modifyElementHTML(idElement, feature, value){
+    switch (feature){
+        case 'textContent':
+            document.getElementById(idElement).textContent = value;
+            break;
+        case 'value':
+            document.getElementById(idElement).value = value;
+            break;
+        case 'removeClass':
+            document.getElementById(idElement).classList.remove(value);
+            break;
+        case 'addClass':
+            document.getElementById(idElement).classList.add(value);
+            break;
+        default:
+            document.getElementById(idElement).setAttribute(feature, value);
+    }
+}
+
+function removeElementHTML(idElement){
+    document.getElementById(idElement).remove();
+}
 
 // navigation
 
 function goToScreen(nextScreen) {
     const appScreens = document.getElementById('main').getElementsByTagName('section');
 
-    const openScreen = document.getElementById(nextScreen);
     let counter;
     for(counter = 0; counter < appScreens.length; counter++) {
-        appScreens[counter].classList.remove('display-active');
-        appScreens[counter].classList.add('display-none');
+        modifyElementHTML(appScreens[counter].id, 'removeClass', 'display-active');
+        modifyElementHTML(appScreens[counter].id, 'addClass', 'display-none');
     }
-    openScreen.classList.remove('display-none');
-    openScreen.classList.add('display-active');
+    modifyElementHTML(nextScreen, 'removeClass', 'display-none');
+    modifyElementHTML(nextScreen, 'addClass', 'display-active');
 }
 
-// screen-editor
+// screen-editor and screen-reader
 
 const originField = document.getElementById('form-field-origin');
 const topicField = document.getElementById('form-field-topic');
@@ -43,23 +84,17 @@ function getAnswers(){
     allAnswers = document.getElementsByClassName('answer-field');
 }
 
-function addObjectHTML(place, method, object){
-    let setPlace = place;
-    let setMethod = method;
-    let setObject = object;
-    setPlace.insertAdjacentHTML(setMethod, setObject);
-}
-
 let answerCounter = 4;
 function addAnswer(){
     getAnswers();
     answerCounter++;
-    let answerHTML = `<div class='group-input-answer'><input id='form-checkbox-answer-${answerCounter}' type='checkbox' class='answer-checkbox'><input id='form-field-answer-${answerCounter}' type='text' placeholder='Resposta' class='input-field answer-field'/><button id='form-button-answer-${answerCounter}' class='delete-answer button' onclick='deleteAnswer(this);'>×</button></div>`
-    addObjectHTML(addAnswerButton, 'beforebegin', answerHTML);
+    let answerHTML = `<div id='form-group-answer-${answerCounter}' class='group-input-answer'><input id='form-checkbox-answer-${answerCounter}' type='checkbox' class='answer-checkbox'><input id='form-field-answer-${answerCounter}' type='text' placeholder='Resposta' autocomplete='off' class='input-field answer-field'/><button id='form-button-answer-${answerCounter}' class='delete-answer button' onclick='deleteAnswer(this);'>×</button></div>`
+    addElementHTML(addAnswerButton, 'beforebegin', answerHTML);
 }
 
 function deleteAnswer(element){
-    document.getElementById(element.id).parentNode.remove();
+    let idFather = document.getElementById(element.id).parentNode.id;
+    removeElementHTML(idFather);
 }
 
 function newForm(){
@@ -71,10 +106,6 @@ function newForm(){
     getAnswers();
     for(i = allAnswers.length-1; i >= 0; i--){
         deleteAnswer(allAnswers[i]);
-        /*
-        allAnswers[i].value = '';
-        allAnswers[i].parentNode.firstElementChild.checked = false;
-        */
     }
     for(i = 0; i < 4; i++){
         addAnswer();
@@ -106,7 +137,8 @@ function sendForm(){
         "options": {},
         "answers": [],
         "hints": hintField.textContent,
-        "explanations": explanationField.textContent
+        "explanations": explanationField.textContent,
+        "tags": []
     }
     deleteEmptyAnswers();
     getAnswers();
@@ -128,21 +160,17 @@ let pageFile = document.getElementById('page-file');
 
 function readFile(){
     goToScreen('screen-reader');
-    /*
-    let jsonString = JSON.stringify(database, null, 4);
-    jsonString = jsonString.replace(/ /g, `&nbsp;`).replace(/\n/g, `<br />`);
-    pageFile.innerHTML = jsonString;
-    */
+
     pageFile.remove();
     let setPlace = document.getElementById('screen-reader-content');
     let newPageFile = `<div id='page-file' class='page-file screen-scroll'></div>`;
-    addObjectHTML(setPlace, 'beforeend', newPageFile);
+    addElementHTML(setPlace, 'beforeend', newPageFile);
     pageFile = document.getElementById('page-file');
     for(i = 0; database.length > i; i++){
         let jsonString = JSON.stringify(database[i], null, 4);
         jsonString = jsonString.replace(/ /g, `&nbsp;`).replace(/\n/g, `<br />`);
         let divJSON = `<div class='page-file-button-container'><div id='page-file-button-${database[i]['id']}' class='page-file-button' onclick='editObject("editObject", ${database[i]['id']});'>${jsonString}</div><button id='page-file-delete-button-${database[i]['id']}' class='delete-object button' onclick='deleteObject(${database[i]['id']});'>×</button></div>`;
-        addObjectHTML(pageFile, 'beforeend', divJSON);
+        addElementHTML(pageFile, 'beforeend', divJSON);
     }
 }
 
@@ -235,7 +263,7 @@ function editObject(method, idObject){
 
 //screen-player
 
-let orderDatabase;
+let shuffledDatabase;
 
 function orderRandomly(quantity) {
     let elements = [];
@@ -338,18 +366,16 @@ function goToCardLast(){
 // screen-overture
 
 let fileName = 'QUIZmeMORE.json';
-let fileInputField = document.getElementById('file-input-field');
-const fileInputButton = document.getElementById('file-input-button');
-const fileNameEditor = document.getElementById('menu-editor-file-name');
-const fileNameReader = document.getElementById('menu-reader-file-name');
 
 function setFileName(nameTheFile){
     fileName = nameTheFile;
-    fileName = fileName.replace(/\.[^.]*$/, '') + ".json";
-
-    fileInputButton.innerText = fileName;
-    fileNameEditor.innerText = fileName;
-    fileNameReader.innerText = fileName;
+    fileName = fileName.replace(/\.[^.]*$/, '') + '.json';
+    if(fileName == '.json'){
+        fileName = 'QUIZmeMORE.json';
+    }
+    modifyElementHTML('file-input-button', 'textContent', fileName);
+    modifyElementHTML('menu-editor-file-name', 'textContent', fileName);
+    modifyElementHTML('menu-reader-file-name', 'textContent', fileName);
 }
 
 const maxPaths = 10;
@@ -362,6 +388,7 @@ function setFilePaths(newPath){
     }
 }
 
+let fileInputField = document.getElementById('file-input-field');
 document.getElementById('file-input-field').addEventListener('change', function(event) {
     const file = event.target.files[0];
 
@@ -372,6 +399,8 @@ document.getElementById('file-input-field').addEventListener('change', function(
             database = jsonFile.database;
             setFileName(file.name);
             setFilePaths(fileInputField.value);
+            modifyElementHTML('file-remove-button', 'removeClass', 'display-none');
+            modifyElementHTML('create-edit-button', 'textContent', 'EDITAR');modifyElementHTML('create-edit-button', 'onclick', 'readFile()');
         };
         reader.readAsText(file);
     } else {
@@ -382,6 +411,34 @@ document.getElementById('file-input-field').addEventListener('change', function(
 function goToOverture(){
     goToScreen('screen-overture');
 }
+
+function loadDatabase(){
+    return;
+}
+
 function playGame(){
-    goToScreen('screen-player');
+    try {
+        if (database[0].id != '') {
+            console.log('existe arquivo');
+            goToScreen('screen-player');
+            loadDatabase();
+        }
+    } catch (error) {
+        console.log("Deck não selecionado ou arquivo não compatível.");
+    }
+}
+
+function removeDatabase(element){
+    modifyElementHTML(element.id, 'addClass', 'display-none');
+    modifyElementHTML('file-input-field', 'value', '');
+    modifyElementHTML('create-edit-button', 'textContent', 'CRIAR');
+    modifyElementHTML('create-edit-button', 'onclick', 'createDatabase();');
+    setFileName('QUIZmeMORE.json');
+    modifyElementHTML('file-input-button', 'textContent', 'ESCOLHER DECK');
+    jsonFile = undefined;
+    database = [];
+}
+
+function createDatabase(){
+    goToScreen('screen-editor');
 }

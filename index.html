@@ -27,42 +27,49 @@
         </figure>
     </header>
     <main id='main'>
-        <section id='screen-overture' class='screen-overture screen-scroll display-none'>
-            <label id='file-input-button' for='file-input-field' class='button overture-file-button overture-button'>ESCOLHER ARQUIVO</label>
-            <input type="file" id="file-input-field" accept=".json" class='display-none'>
-            <button onclick='playGame();' class='button overture-player-button overture-button'>JOGAR</button>
-            <button onclick='editObject()' class='button overture-editor-button overture-button'>EDITAR</button>
-        </section>
-        <section id='screen-editor' class='screen-editor screen-scroll display-none'>
-            <div class='screen-editor-content screen-scroll'>
-                <div class='menu-editor-top'>
-                    <p id='menu-editor-file-name' class='menu-editor-file-name'>QUIZmeMORE.json</p>
-                    <div class='menu-editor-top-buttons'>
-                        <button onclick='readFile();' class='button'><img src='medias/article_FILL0_wght400_GRAD0_opsz24.svg' /></button>
-                        <button onclick='saveFile();' class='button'><img src='medias/download_FILL0_wght400_GRAD0_opsz24.svg' /></button>
+        <section id='screen-overture' class='screen-overture display-active'>
+            <div class='screen-overture-content screen-scroll'>
+                <div class='overture-list'>
+                    <div class='file-input-group'>
+                        <label id='file-input-button' for='file-input-field' class='button file-input-button overture-button'>ESCOLHER DECK</label>
+                        <input type='file' id='file-input-field' accept='.json' class='display-none'>
+                        <button id='file-remove-button' class='button overture-button file-remove-button display-none' onclick='removeDatabase(this);'><img src='medias/delete_FILL0_wght400_GRAD0_opsz24.svg' /></button>
                     </div>
+                    <button onclick='playGame();' class='button overture-player-button overture-button'>JOGAR</button>
+                    <button id='create-edit-button' onclick='createDatabase();' class='button overture-editor-button overture-button'>CRIAR</button>
                 </div>
+            </div>
+        </section>
+        <section id='screen-editor' class='screen-editor display-none'>
+            <div class='menu-editor-top'>
+                <p id='menu-editor-file-name' class='menu-editor-file-name'>QUIZmeMORE.json</p>
+                <div class='menu-editor-top-buttons'>
+                    <button onclick='readFile();' class='button'><img src='medias/article_FILL0_wght400_GRAD0_opsz24.svg' /></button>
+                    <button onclick='saveFile();' class='button'><img src='medias/download_FILL0_wght400_GRAD0_opsz24.svg' /></button>
+                </div>
+            </div>
+            <div class='screen-editor-content screen-scroll'>
                 <div class='screen-editor-form'>
                     <input id='form-field-origin' type='text' placeholder='Origem' class='input-field'/>
                     <input id='form-field-topic' type='text' placeholder='Tópico' class='input-field'/>
                     <div id='form-field-question' role='textbox' placeholder='Questão' class='input-field div-field screen-scroll' contenteditable='true'></div>
                     <p class='span-note'>MARQUE O(S) CHECKBOX(ES) DA(S) RESPOSTA(S) CORRETA(S).</p>
-                    <div class='group-input-answer'>
+                    <div id='form-group-answer-1' class='group-input-answer'>
                         <input id='form-checkbox-answer-1' type='checkbox' class='answer-checkbox'>
                         <input id='form-field-answer-1' type='text' placeholder='Resposta' class='input-field answer-field'/>
                         <button id='form-button-answer-1' class='delete-answer button' onclick='deleteAnswer(this);'>×</button>
                     </div>
-                    <div class='group-input-answer'>
+                    <div id='form-group-answer-2' class='group-input-answer'>
                         <input id='form-checkbox-answer-2' type='checkbox' class='answer-checkbox'>
                         <input id='form-field-answer-2' type='text' placeholder='Resposta' class='input-field answer-field'/>
                         <button id='form-button-answer-2' class='delete-answer button' onclick='deleteAnswer(this);'>×</button>
                     </div>
-                    <div class='group-input-answer'>
+                    <div id='form-group-answer-3' class='group-input-answer'>
                         <input id='form-checkbox-answer-3' type='checkbox' class='answer-checkbox'>
                         <input id='form-field-answer-3' type='text' placeholder='Resposta' class='input-field answer-field'/>
                         <button id='form-button-answer-3' class='delete-answer button' onclick='deleteAnswer(this);'>×</button>
                     </div>
-                    <div class='group-input-answer'>
+                    <div id='form-group-answer-4' class='group-input-answer'>
                         <input id='form-checkbox-answer-4' type='checkbox' class='answer-checkbox'>
                         <input id='form-field-answer-4' type='text' placeholder='Resposta' class='input-field answer-field'/>
                         <button id='form-button-answer-4' class='delete-answer button' onclick='deleteAnswer(this);'>×</button>
@@ -77,20 +84,20 @@
                 <button onclick='sendForm();' class='button'><img src='medias/\send_FILL0_wght400_GRAD0_opsz24.svg' /></button>
             </div>
         </section>
-        <section id='screen-reader' class='screen-reader screen-scroll display-none'>
-            <div id='screen-reader-content' class='screen-reader-content'>
-                <div class='menu-editor-top'>
-                    <p id='menu-reader-file-name' class='menu-reader-file-name' onblur="setFileName(this.textContent);" contenteditable='true'>QUIZmeMORE.json</p>
-                    <div class='menu-editor-top-buttons'>
-                        <button onclick='editObject();'  class='button'><img src='medias/add_box_FILL0_wght400_GRAD0_opsz24.svg' /></button>
-                        <button onclick='saveFile();' class='button'><img src='medias/download_FILL0_wght400_GRAD0_opsz24.svg' /></button>
-                    </div>
+        <section id='screen-reader' class='screen-reader display-none'>
+            <div class='menu-editor-top'>
+                <p id='menu-reader-file-name' class='menu-reader-file-name' onblur="setFileName(this.textContent);" contenteditable='true'>QUIZmeMORE.json</p>
+                <div class='menu-editor-top-buttons'>
+                    <button onclick='editObject();' class='button'><img src='medias/add_box_FILL0_wght400_GRAD0_opsz24.svg' /></button>
+                    <button onclick='saveFile();' class='button'><img src='medias/download_FILL0_wght400_GRAD0_opsz24.svg' /></button>
                 </div>
-                <div id='page-file' class='page-file screen-scroll'></div>
+            </div>
+            <div id='screen-reader-content' class='screen-reader-content screen-scroll'>
+                <div id='page-file' class='page-file'></div>
             </div>
         </section>
-        <section id='screen-player' class='screen-player screen-scroll display-active'>
-            <div class='screen-player-content screen-scroll'>
+        <section id='screen-player' class='screen-player display-none'>
+            <div class='screen-player-content'>
                 <div class='player-status'>
                     <div class='player-status-info'>
                         <div class='player-status-right'>
@@ -106,7 +113,7 @@
                 </div>
                 <div class='deck-table screen-scroll'>
                     <p class='card-info-topic'>TÓPICO: <span>Cultura pop</span></p>
-                    <p id='question-card' class='question-card '>Qual o sentido da vida, do universo e tudo mais?</p>
+                    <p id='question-card' class='question-card '><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />Qual o sentido da vida, do universo e tudo mais?</p>
                     <div id='answers-deck' class='answers-deck'>
                         <p class='answer-card answer-wrong' onclick='pickCard(this);' value='0'><span class='single-answer'><span></span></span>Comer, rezar e amar</p>
                         <p class='answer-card answer-normal' onclick='pickCard(this);' value='0'><span class='single-answer'><span></span></span>Reproduzir e passar o conhecimento</p>
@@ -115,20 +122,23 @@
                     </div>
                     <p class='card-info-origin'>ORIGEM: <span>Douglas Addams</span></p>
                 </div>
-            </div>
-            <div class='menu-player-bottom'>
-                <div class='menu-player-hint-confirm'>
-                    <button class='button hint-button' oncLick='goToHint();'><img src='medias/lightbulb_FILL0_wght400_GRAD0_opsz24.svg'/></button>
-                    <button class='button confirm-button' oncLick='confirmQuestion();'><img src='medias/send_FILL0_wght400_GRAD0_opsz24.svg' /></button>
+                <div class='menu-player-bottom'>
+                    <div class='menu-player-hint-confirm'>
+                        <button class='button hint-button' oncLick='goToHint();'><img src='medias/lightbulb_FILL0_wght400_GRAD0_opsz24.svg'/></button>
+                        <button class='button confirm-button' oncLick='confirmQuestion();'><img src='medias/send_FILL0_wght400_GRAD0_opsz24.svg' /></button>
+                    </div>
+                    <div class='directional-buttons-panel'>
+                        <button class='button directional-button' onclick='goToCardFirst();'><img src='medias/first_page_FILL0_wght400_GRAD0_opsz24.svg' /></button>
+                        <button class='button directional-button' onclick='goToCardBefore();'><img src='medias/navigate_before_FILL0_wght400_GRAD0_opsz24.svg' /></button>
+                        <button class='button directional-button' onclick='moveCardToLast();'><img src='medias/move_up_FILL0_wght400_GRAD0_opsz24.svg' style='transform: rotate(90deg);' /></button>
+                        <button class='button directional-button' onclick='goToCardNext();'><img src='medias/navigate_next_FILL0_wght400_GRAD0_opsz24.svg' /></button>
+                        <button class='button directional-button' onclick='goToCardLast();'><img src='medias/last_page_FILL0_wght400_GRAD0_opsz24.svg' /></button>
+                    </div>
                 </div>
-                <div class='directional-buttons-panel'>
-                    <button class='button directional-button' onclick='goToCardFirst();'><img src='medias/first_page_FILL0_wght400_GRAD0_opsz24.svg' /></button>
-                    <button class='button directional-button' onclick='goToCardBefore();'><img src='medias/navigate_before_FILL0_wght400_GRAD0_opsz24.svg' /></button>
-                    <button class='button directional-button' onclick='moveCardToLast();'><img src='medias/move_up_FILL0_wght400_GRAD0_opsz24.svg' style='transform: rotate(90deg);' /></button>
-                    <button class='button directional-button' onclick='goToCardNext();'><img src='medias/navigate_next_FILL0_wght400_GRAD0_opsz24.svg' /></button>
-                    <button class='button directional-button' onclick='goToCardLast();'><img src='medias/last_page_FILL0_wght400_GRAD0_opsz24.svg' /></button>
-                </div>
             </div>
+        </section>
+        <section id='screen-alert' class='screen-alert display-none'>
+            <div class='screen-alert-content'></div>
         </section>
     </main>
     <footer id='footer'>

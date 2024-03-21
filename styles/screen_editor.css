@@ -9,6 +9,7 @@
     position: relative;
     border-top-left-radius: 2rem;
     border-top-right-radius: 2rem;
+    padding-top: 1rem;
 }
 
 .screen-editor-content {
@@ -17,8 +18,11 @@
     align-items: center;
     justify-content: flex-start;
     height: 100%;
-    width: 100%;
+    width: 85%;
     position: relative;
+    row-gap: 0.5rem;
+    padding-right: 0.5rem;
+    background: transparent;
     resize: none;
     overflow-x: hidden;
     overflow-y: scroll;
@@ -29,11 +33,12 @@
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
+    height: fit-content;
+    width: 100%;
     position: relative;
-    width: 85%;
-    height: 100%;
     row-gap: 0.5rem;
     background: transparent;
+    padding-bottom: 2rem;
 }
 
 .screen-editor-form *::placeholder{
@@ -55,6 +60,8 @@
     font-weight: 400;
     padding-left: 0.5rem;
     background: var(--color-white);
+    -webkit-autocomplete: off;
+    -webkit-autofill: off;
 }
 
 .group-input-answer {
@@ -87,24 +94,15 @@
     background: var(--color-gray);
 }
 
-.screen-editor-form > div:first-of-type {
-    width: 100%;
-    height: fit-content;
-}
-
 .div-field {
+    display: inline;
     word-wrap: break-word;
     min-height: 4rem;
-    max-height: 9rem;
     cursor: text;
     resize: none;
     overflow-x: hidden;
-    overflow-y: scroll;
+    overflow-y: auto;
     user-select: auto;
-    display: inline;
-    text-decoration-style: solid;
-    background: var(--color-white);
-    font-weight: 400;
 }
 
 #form-field-question:empty::before {
@@ -129,20 +127,17 @@
 }
 
 .menu-editor-top {
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
+    margin-bottom: 1rem;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    padding: 0 7.5%;
-    height: 4rem;
-    width: 100%;
+    height: fit-content;
+    width: 85%;
     column-gap: 3%;
     position: relative;
-    bottom: 0;
-    padding-bottom: 0.3rem;
-    background-color: transparen
+    background-color: transparent;
+    padding-right: 0.5rem;
 }
 
 .menu-editor-file-name {
@@ -175,8 +170,8 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: center;
-    column-gap: 3%;
+    justify-content: flex-end;
+    column-gap: 0.3rem;
 }
 
 .menu-editor-top-buttons > .button {
@@ -188,12 +183,14 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    height: 5.5rem;
+    height: fit-content;
     width: 100%;
     column-gap: 3%;
+    position: relative;
     padding-bottom: 0.3rem;
     margin-bottom: 0.5rem;
     background-color: transparent;
+    padding-right: 0.5rem;
 }
 
 .menu-editor-bottom button {

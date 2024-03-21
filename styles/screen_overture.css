@@ -9,15 +9,43 @@
     position: relative;
     border-top-left-radius: 2rem;
     border-top-right-radius: 2rem;
+    padding-top: 2rem;
+}
+
+.screen-overture-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100%;
+    width: 85%;
+    position: relative;
+    row-gap: 0.5rem;
+    background: transparent;
+    resize: none;
+    overflow: hidden;
+    overflow-y: scroll;
+}
+
+.overture-list {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    color: var(--color-white);
+    height: fit-content;
+    width: 100%;
+    position: relative;
+    padding-right: 0.5rem;
+    resize: none;
     row-gap: 1rem;
-    padding-top: 1.5rem;
+    padding-bottom: 2rem;
 }
 
 .overture-button {
     position: relative;
-    top: 0.2rem;
     height: 3rem;
-    width: 85%;
+    width: 100%;
     border-radius: 0.3rem;
     font-size: 1rem;
     font-weight: 600;
@@ -28,9 +56,27 @@
     justify-content: center;
 }
 
-.overture-file-button {
+.file-input-group {
+    position: relative;
+    height: fit-content;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    column-gap: 3%;
+}
+
+.file-input-button {
+    background: var(--color-light-orange);
+    color: var(--color-black-89);
+    flex-grow: 1;
+}
+
+.file-remove-button {
     background: var(--color-light-red);
     color: var(--color-black-89);
+    width: 17.6%
 }
 
 .overture-player-button {
