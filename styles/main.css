@@ -174,3 +174,13 @@ figcaption {
 .button:active {
     transform: translateY(0.1rem);
 }
+
+@keyframes blink {
+    0% { background: currentColor; }
+    50% { background: #FFFF99; }
+    100% { background: currentColor; }
+}
+
+.blinking {
+    animation: blink 1.5s infinite;
+}
