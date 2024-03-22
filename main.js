@@ -20,17 +20,29 @@ function handleLocalStorage(method, key, value){
 
 // General variables
 
+const defaultNameFile = 'QUIZmeMORE.json';
+const programVersion = '0.0.0';
+let jsonFileOverture = [];
+
+let jsonFileOthers = {
+    "version": programVersion,
+    "overture": jsonFileOverture
+}
+
+let newJsonFile = {
+    "database": [],
+    "others": jsonFileOthers
+}
+
 let jsonFile;
 let database = [];
 let filePaths = [];
 
 // global functions
 
-function addElementHTML(place, method, element){
-    let setPlace = place;
-    let setMethod = method;
-    let setElement = element;
-    setPlace.insertAdjacentHTML(setMethod, setElement);
+function addElementHTML(idPlace, method, element){
+    let setPlace = document.getElementById(idPlace);
+    setPlace.insertAdjacentHTML(method, element);
 }
 
 function modifyElementHTML(idElement, feature, value){
@@ -77,7 +89,6 @@ const topicField = document.getElementById('form-field-topic');
 const questionField = document.getElementById('form-field-question');
 const hintField = document.getElementById('form-field-hint');
 const explanationField = document.getElementById('form-field-explanation');
-const addAnswerButton = document.getElementById('form-button-add-answer');
 
 let allAnswers = [];
 function getAnswers(){
@@ -89,7 +100,7 @@ function addAnswer(){
     getAnswers();
     answerCounter++;
     let answerHTML = `<div id='form-group-answer-${answerCounter}' class='group-input-answer'><input id='form-checkbox-answer-${answerCounter}' type='checkbox' class='answer-checkbox'><input id='form-field-answer-${answerCounter}' type='text' placeholder='Resposta' autocomplete='off' class='input-field answer-field'/><button id='form-button-answer-${answerCounter}' class='delete-answer button' onclick='deleteAnswer(this);'>×</button></div>`
-    addElementHTML(addAnswerButton, 'beforebegin', answerHTML);
+    addElementHTML('form-button-add-answer', 'beforebegin', answerHTML);
 }
 
 function deleteAnswer(element){
@@ -115,7 +126,7 @@ function newForm(){
 function deleteEmptyAnswers(){
     getAnswers();
     for(i = allAnswers.length-1; i >= 0; i--){
-        if(allAnswers[i].value == ''){
+        if(allAnswers[i].value.replace(/\W/g, '').replace(/\s/g, '') == ''){
             deleteAnswer(allAnswers[i]);
         }
     }
@@ -127,9 +138,12 @@ function idGen() {
     newId = database.length == 0 ? "1" : String(parseFloat(database[database.length-1].id) + 1);
 }
 
+let objectJSON = {};
+
 function sendForm(){
+
     idGen();
-    let objectJSON = {
+    objectJSON = {
         "id": newId,
         "origin": originField.value,
         "topic": topicField.value,
@@ -146,31 +160,42 @@ function sendForm(){
         if(allAnswers[i].value){
             let j = i + 1;
             let keyAnswer = `${j}`;
-            objectJSON["options"][keyAnswer] = allAnswers[i].value;
-            if(allAnswers[i].parentNode.firstElementChild.checked == true){
-                objectJSON["answers"].push(keyAnswer);
+            if(allAnswers[i].value.replace(/\W/g, '').replace(/\s/g, '') != ''){
+                objectJSON['options'][keyAnswer] = allAnswers[i].value;
+                if(allAnswers[i].parentNode.firstElementChild.checked == true){
+                    objectJSON['answers'].push(keyAnswer);
+                }
             }
         }
     }
-    database.push(objectJSON);
-    newForm();
+
+    if(objectJSON['question'].replace(/\W/g, '').replace(/\s/g, '') == ''){
+        openAlert('Adicione uma questão válida.');
+    }else if(!Object.keys(objectJSON['options'][1])){
+        openAlert('Adicione, pelo menos, 2 respostas válidas.');
+    }else if(!objectJSON['answers'][0]){
+        openAlert('Marque, pelo menos, 1 resposta como correta.');
+    }else{
+        database.push(objectJSON);
+        newForm();
+    }
 }
 
-let pageFile = document.getElementById('page-file');
+
 
 function readFile(){
     goToScreen('screen-reader');
 
+    let pageFile = document.getElementById('page-file');
     pageFile.remove();
-    let setPlace = document.getElementById('screen-reader-content');
+
     let newPageFile = `<div id='page-file' class='page-file screen-scroll'></div>`;
-    addElementHTML(setPlace, 'beforeend', newPageFile);
-    pageFile = document.getElementById('page-file');
+    addElementHTML('screen-reader-content', 'beforeend', newPageFile);
     for(i = 0; database.length > i; i++){
         let jsonString = JSON.stringify(database[i], null, 4);
         jsonString = jsonString.replace(/ /g, `&nbsp;`).replace(/\n/g, `<br />`);
         let divJSON = `<div class='page-file-button-container'><div id='page-file-button-${database[i]['id']}' class='page-file-button' onclick='editObject("editObject", ${database[i]['id']});'>${jsonString}</div><button id='page-file-delete-button-${database[i]['id']}' class='delete-object button' onclick='deleteObject(${database[i]['id']});'>×</button></div>`;
-        addElementHTML(pageFile, 'beforeend', divJSON);
+        addElementHTML('page-file', 'beforeend', divJSON);
     }
 }
 
@@ -263,7 +288,7 @@ function editObject(method, idObject){
 
 //screen-player
 
-let shuffledDatabase;
+let shuffledArray;
 
 function orderRandomly(quantity) {
     let elements = [];
@@ -278,69 +303,172 @@ function orderRandomly(quantity) {
         }
         return array;
     }
-    return shuffle(elements);
+    shuffledArray = shuffle(elements);
 }
 
-function getCards(){
-    let reorderedElements;
-    if(database){
-        reorderedElements = orderRandomly(10);
-    }else{
-        reorderedElements = orderRandomly(10);
-        console.log("ainda não tem cards");
-    }
-    reorderedElements = orderRandomly(10);
+function blankCard(){
+    const newCard = `<div id='card-board' class='card-board screen-scroll'><p id='card-info-topic' class='card-info-topic'>TÓPICO: <span id='card-info-topic-span'></span></p><p id='card-question' class='card-question '></p><div id='card-options' class='card-options'></div><p id='card-info-origin' class='card-info-origin'>ORIGEM: <span id='card-info-origin-span'></span></p></div>`;
+    removeElementHTML('card-board');
+    addElementHTML('player-status', 'afterend', newCard);
 }
 
-let numberOptions = 1;
-let spanCard = "<span class='single-answer'></span>";
-function numOptions(){
-    numberOptions = 1;
-    switch (numberOptions) {
+let numberAnswers = 1;
+let spanCard = "<span class='single-answer'><span></span></span>";
+let optionsIntoQuestion = '';
+function setNumberAnswers(num){
+    numberAnswers = num; //get number to current card
+    switch (numberAnswers) {
         case 1:
-            spanCard = "<span class='single-answer'></span>";
+            spanCard = "<span class='single-answer'><span></span></span>";
+            optionsIntoQuestion = '';
             break;
         default:
-            spanCard = "<span class='multi-answer'></span>";
-    }   
-}
-
-function playAndPause(){
-    return;
-}
-
-let numberCards = 0;
-function numCards(){
-    numberCards = document.getElementById('answers-deck').childElementCount;
-}
-
-function pickCard(element) {
-    numOptions();
-    numCards();
-
-    let value = parseInt(element.getAttribute('value'));
-    switch (value) {
-        case 0:
-            if(numberOptions < 2){
-                for(i = 0; numberCards > i; i++){
-                    let deck = document.getElementById('answers-deck').children;
-                    deck[i].setAttribute('value', '0');
-                }
-            }
-            element.setAttribute('value', '1');
-            break;
-        case 1:
-            element.setAttribute('value', '0');
-            break;
+            spanCard = "<span class='multi-answer'><span></span></span>";
+            optionsIntoQuestion = ` (Selecione ${num})`;
     }
 }
 
+let newOption;
+let idAnswerOptionGen = 0;
+function getOptions(answerText){
+    newOption = `<p id='answer-option-${idAnswerOptionGen}' class='answer-option answer-wrong' onclick='selectOption(this);' value='0'>${spanCard}${answerText}</p>`;
+    idAnswerOptionGen++;
+}
+
+let currentCard = 0;
+let objectCard = {};
+let objectCardHints = '';
+let objectCardExplanations = '';
+let objectCardTags = [];
+let objectCardAnswers = [];
+let objectCardOptions = {};
+let shuffledObjectCardOptions;
+
+function createCard(){
+    blankCard();
+    objectCard = database[shuffledDatabase[currentCard]-1];
+
+    const objectCardTopic = objectCard.topic;
+    if(objectCardTopic){
+        modifyElementHTML('card-info-topic-span', 'textContent', objectCardTopic);
+    }else{
+        modifyElementHTML('card-info-topic', 'addClass', 'display-none');
+    }
+
+    objectCardAnswers = objectCard.answers;
+    setNumberAnswers(objectCardAnswers.length);
+    
+    objectCardQuestion = objectCard.question + optionsIntoQuestion;
+    modifyElementHTML('card-question', 'textContent', objectCardQuestion);
+    
+    objectCardOptions = objectCard.options;
+    console.log(Object.keys(objectCardOptions));
+
+    orderRandomly(Object.keys(objectCardOptions).length);
+    shuffledObjectCardOptions = shuffledArray;
+    console.log(shuffledObjectCardOptions);
+
+    for(i = 0; shuffledObjectCardOptions.length > i; i++){
+        let keyObjectCardOptions = String(shuffledObjectCardOptions[i]);
+        getOptions(objectCardOptions[keyObjectCardOptions]);
+        addElementHTML('card-options', 'beforeend', newOption);
+    }
+    
+    const objectCardOrigin = objectCard.origin;
+    if(objectCardOrigin){
+        modifyElementHTML('card-info-origin-span', 'textContent', objectCardOrigin);
+    }else{
+        modifyElementHTML('card-info-origin', 'addClass', 'display-none');
+    }
+
+    objectCardHints = objectCard.hints;
+    objectCardExplanations = objectCard.explanations;
+
+}
+
+let countAdvance = 0;
+let statusScore = 0;
+let statusProgress = "0/0";
+let statusProgressBar = "0%";
+let statusPercent = "0%";
+
+function updatePlayerStatus(){
+    statusProgress = String(countAdvance)+'/'+String(shuffledDatabase.length);
+    statusProgressBar = (((countAdvance / shuffledDatabase.length) * 100).toFixed(0))+'%';
+    statusPercent = (((statusScore / (countAdvance-1)) * 100).toFixed(0))+'%';
+    modifyElementHTML('status-score', 'textContent', statusScore);
+    modifyElementHTML('status-progress', 'textContent', statusProgress);
+    modifyElementHTML('status-percent', 'textContent', statusPercent);
+    modifyElementHTML('status-progress-bar-blue', 'style', `width:${statusProgressBar};`);
+}
+
+function setPlayerStatus(){
+    stopTimer();
+    countAdvance = 0;
+    statusScore = 0;
+    statusProgress = "0/0";
+    statusPercent = "0%";
+    updatePlayerStatus();
+}
+
+function setPanelButtons(){
+    if(objectCardHints === '' || objectCardHints === undefined){
+        modifyElementHTML('hint-button', 'addClass', 'display-none');
+    }else{
+        modifyElementHTML('hint-button', 'removeClass', 'display-none');
+    }
+}
+
+let shuffledDatabase;
+function startGame(){
+    orderRandomly(database.length);
+    shuffledDatabase = shuffledArray;
+    createCard();
+    setPlayerStatus();
+    countAdvance = 1;
+    updatePlayerStatus();
+    //setPanelButtons(); //HTML button com id trocado para desabilitar
+    document.getElementById('timer-display').textContent = '00:00';
+    playAndPause();
+}
+
+
+//screen-player bottom menu
 function goToHint(){
     return;
 }
 
+let answerOptions = document.getElementsByClassName('answer-option');
+let countCorrectAnswers;
+
 function confirmQuestion(){
-    return;
+    console.log(answerOptions.length);
+    countCorrectAnswers = 0;
+    console.log(countCorrectAnswers);
+
+    for(i = 0; answerOptions.length > i; i++){
+        if(answerOptions[i].getAttribute('value') == 1){
+            modifyElementHTML(answerOptions[i].id, 'style', 'background: linear-gradient(-45deg, var(--color-dark-red) 95%, var(--color-black-89));');
+        }
+    }
+
+    for(i = 0; objectCardAnswers.length > i; i++){
+
+        let indexAnswer = shuffledObjectCardOptions.indexOf(parseInt(objectCardAnswers[i]));
+        modifyElementHTML(answerOptions[indexAnswer].id, 'style', 'background: linear-gradient(-45deg, var(--color-dark-green) 95%, var(--color-black-89));');
+        console.log(answerOptions[indexAnswer].textContent);
+
+        if(answerOptions[indexAnswer].getAttribute('value') == 1){
+            countCorrectAnswers++;
+        }
+    }
+
+    if(countCorrectAnswers == objectCardAnswers.length){
+        statusScore++;
+    }
+
+    countAdvance++;
+    updatePlayerStatus();
 }
 
 function goToExplanation(){
@@ -363,15 +491,80 @@ function goToCardLast(){
     return;
 }
 
-// screen-overture
+// screen-player card movement
 
-let fileName = 'QUIZmeMORE.json';
+let numberCardOptions = 0;
+function numCardOptions(){
+    numberCardOptions = document.getElementById('card-options').childElementCount;
+}
+
+function selectOption(element) {
+    numCardOptions();
+
+    let value = parseInt(element.getAttribute('value'));
+    switch (value) {
+        case 0:
+            if(numberAnswers < 2){
+                for(i = 0; numberCardOptions > i; i++){
+                    let deck = document.getElementById('card-options').children;
+                    deck[i].setAttribute('value', '0');
+                }
+            }
+            element.setAttribute('value', '1');
+            break;
+        case 1:
+            element.setAttribute('value', '0');
+            break;
+    }
+}
+
+// screen-player timer
+let timer;
+let timerStatus = false;
+let totalTime = 0;
+let pausedTime = 0;
+
+function formatTime(time) {
+    const hours = Math.floor(time / 3600);
+    const minutes = Math.floor((time % 3600) / 60);
+    const seconds = time % 60;
+    if(hours != 0){
+        return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    }else{
+        return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    }
+}
+
+function playAndPause() {
+    if (timerStatus) {
+        clearInterval(timer);
+        timerStatus = false;
+        pausedTime = totalTime;
+    } else {
+        timer = setInterval(() => {
+            totalTime++;
+            document.getElementById('timer-display').textContent = formatTime(totalTime);
+        }, 1000);
+        timerStatus = true;
+        totalTime = pausedTime;
+    }
+}
+
+function stopTimer(){
+    clearInterval(timer);
+    timerStatus = false;
+    totalTime = 0;
+    pausedTime = 0;
+}
+
+// screen-overture
+let fileName = defaultNameFile;
 
 function setFileName(nameTheFile){
     fileName = nameTheFile;
     fileName = fileName.replace(/\.[^.]*$/, '') + '.json';
     if(fileName == '.json'){
-        fileName = 'QUIZmeMORE.json';
+        fileName = defaultNameFile;
     }
     modifyElementHTML('file-input-button', 'textContent', fileName);
     modifyElementHTML('menu-editor-file-name', 'textContent', fileName);
@@ -388,6 +581,16 @@ function setFilePaths(newPath){
     }
 }
 
+function startFile(fileName) {
+    if(jsonFile == undefined){
+        jsonFile = newJsonFile;
+    }
+    setFileName(fileName);
+    updateFile();
+    modifyElementHTML('file-remove-button', 'removeClass', 'display-none');
+    modifyElementHTML('create-edit-button', 'textContent', 'EDITAR');modifyElementHTML('create-edit-button', 'onclick', 'readFile()');
+}
+
 let fileInputField = document.getElementById('file-input-field');
 document.getElementById('file-input-field').addEventListener('change', function(event) {
     const file = event.target.files[0];
@@ -397,10 +600,8 @@ document.getElementById('file-input-field').addEventListener('change', function(
         reader.onload = function(event) {
             jsonFile = JSON.parse(event.target.result);
             database = jsonFile.database;
-            setFileName(file.name);
             setFilePaths(fileInputField.value);
-            modifyElementHTML('file-remove-button', 'removeClass', 'display-none');
-            modifyElementHTML('create-edit-button', 'textContent', 'EDITAR');modifyElementHTML('create-edit-button', 'onclick', 'readFile()');
+            startFile(file.name);
         };
         reader.readAsText(file);
     } else {
@@ -412,19 +613,14 @@ function goToOverture(){
     goToScreen('screen-overture');
 }
 
-function loadDatabase(){
-    return;
-}
-
-function playGame(){
+function goToGame(){
     try {
         if (database[0].id != '') {
-            console.log('existe arquivo');
             goToScreen('screen-player');
-            loadDatabase();
+            startGame();
         }
     } catch (error) {
-        console.log("Deck não selecionado ou arquivo não compatível.");
+        openAlert('Escolha um deck primeiro ou crie o seu próprio.');
     }
 }
 
@@ -433,7 +629,7 @@ function removeDatabase(element){
     modifyElementHTML('file-input-field', 'value', '');
     modifyElementHTML('create-edit-button', 'textContent', 'CRIAR');
     modifyElementHTML('create-edit-button', 'onclick', 'createDatabase();');
-    setFileName('QUIZmeMORE.json');
+    setFileName(defaultNameFile);
     modifyElementHTML('file-input-button', 'textContent', 'ESCOLHER DECK');
     jsonFile = undefined;
     database = [];
@@ -441,4 +637,16 @@ function removeDatabase(element){
 
 function createDatabase(){
     goToScreen('screen-editor');
+    startFile(defaultNameFile);
+}
+
+// screen-alert
+
+function openAlert(msg){
+    modifyElementHTML('screen-alert', 'removeClass', 'display-none');
+    modifyElementHTML('msg-alert', 'textContent', msg);
+}
+
+function killAlert(){
+    modifyElementHTML('screen-alert', 'addClass', 'display-none');
 }

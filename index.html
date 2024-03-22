@@ -35,7 +35,7 @@
                         <input type='file' id='file-input-field' accept='.json' class='display-none'>
                         <button id='file-remove-button' class='button overture-button file-remove-button display-none' onclick='removeDatabase(this);'><img src='medias/delete_FILL0_wght400_GRAD0_opsz24.svg' /></button>
                     </div>
-                    <button onclick='playGame();' class='button overture-player-button overture-button'>JOGAR</button>
+                    <button onclick='goToGame();' class='button overture-player-button overture-button'>JOGAR</button>
                     <button id='create-edit-button' onclick='createDatabase();' class='button overture-editor-button overture-button'>CRIAR</button>
                 </div>
             </div>
@@ -45,7 +45,6 @@
                 <p id='menu-editor-file-name' class='menu-editor-file-name'>QUIZmeMORE.json</p>
                 <div class='menu-editor-top-buttons'>
                     <button onclick='readFile();' class='button'><img src='medias/article_FILL0_wght400_GRAD0_opsz24.svg' /></button>
-                    <button onclick='saveFile();' class='button'><img src='medias/download_FILL0_wght400_GRAD0_opsz24.svg' /></button>
                 </div>
             </div>
             <div class='screen-editor-content screen-scroll'>
@@ -88,8 +87,8 @@
             <div class='menu-editor-top'>
                 <p id='menu-reader-file-name' class='menu-reader-file-name' onblur="setFileName(this.textContent);" contenteditable='true'>QUIZmeMORE.json</p>
                 <div class='menu-editor-top-buttons'>
-                    <button onclick='editObject();' class='button'><img src='medias/add_box_FILL0_wght400_GRAD0_opsz24.svg' /></button>
                     <button onclick='saveFile();' class='button'><img src='medias/download_FILL0_wght400_GRAD0_opsz24.svg' /></button>
+                    <button onclick='editObject();' class='button'><img src='medias/add_box_FILL0_wght400_GRAD0_opsz24.svg' /></button>
                 </div>
             </div>
             <div id='screen-reader-content' class='screen-reader-content screen-scroll'>
@@ -98,36 +97,36 @@
         </section>
         <section id='screen-player' class='screen-player display-none'>
             <div class='screen-player-content'>
-                <div class='player-status'>
+                <div id='player-status' class='player-status'>
                     <div class='player-status-info'>
                         <div class='player-status-right'>
                             <p class='player-status-data'>ACERTOS: <span id='status-score'>1</span></p>
                             <p class='player-status-data'>PROGRESSO: <span id='status-progress'>2/10 </span></p>
                             <p class='player-status-data'>APROVEITAMENTO: <span id='status-percent'>100%</span></p>
                         </div>
-                        <button class='button play-pause-button' onclick='playAndPause();'><p id='status-timer'>01:23</p><img src='medias/play_pause_FILL0_wght400_GRAD0_opsz24.svg' /></button>
+                        <button class='button play-pause-button' onclick='playAndPause();'><p id='timer-display'>01:23</p><img src='medias/play_pause_FILL0_wght400_GRAD0_opsz24.svg' /></button>
                     </div>
                     <div class='status-progress-bar'>
-                        <div class='status-progress-bar-blue'></div>
+                        <div id='status-progress-bar-blue' class='status-progress-bar-blue'></div>
                     </div>
                 </div>
-                <div class='deck-table screen-scroll'>
-                    <p class='card-info-topic'>TÓPICO: <span>Cultura pop</span></p>
-                    <p id='question-card' class='question-card '><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />Qual o sentido da vida, do universo e tudo mais?</p>
-                    <div id='answers-deck' class='answers-deck'>
-                        <p class='answer-card answer-wrong' onclick='pickCard(this);' value='0'><span class='single-answer'><span></span></span>Comer, rezar e amar</p>
-                        <p class='answer-card answer-normal' onclick='pickCard(this);' value='0'><span class='single-answer'><span></span></span>Reproduzir e passar o conhecimento</p>
-                        <p class='answer-card answer-normal' onclick='pickCard(this);' value='0'><span class='single-answer'><span></span></span>42</p>
-                        <p class='answer-card answer-right' onclick='pickCard(this);' value='0'><span class='single-answer'><span></span></span>Sexo, drogas e rock'n'roll</p>
+                <div id='card-board' class='card-board screen-scroll'>
+                    <p id='card-info-topic' class='card-info-topic'>TÓPICO: <span id='card-info-topic-span'>Cultura pop</span></p>
+                    <p id='card-question' class='card-question '>Qual o sentido da vida, do universo e tudo mais?</p>
+                    <div id='card-options' class='card-options'>
+                        <p class='answer-option answer-wrong' onclick='selectOption(this);' value='0'><span class='single-answer'><span></span></span>Comer, rezar e amar</p>
+                        <p class='answer-option answer-normal' onclick='selectOption(this);' value='0'><span class='single-answer'><span></span></span>Reproduzir e passar o conhecimento</p>
+                        <p class='answer-option answer-normal' onclick='selectOption(this);' value='0'><span class='single-answer'><span></span></span>42</p>
+                        <p class='answer-option answer-right' onclick='selectOption(this);' value='0'><span class='single-answer'><span></span></span>Sexo, drogas e rock'n'roll</p>
                     </div>
-                    <p class='card-info-origin'>ORIGEM: <span>Douglas Addams</span></p>
+                    <p id='card-info-origin' class='card-info-origin'>ORIGEM: <span id='card-info-origin-span'>Douglas Addams</span></p>
                 </div>
                 <div class='menu-player-bottom'>
                     <div class='menu-player-hint-confirm'>
-                        <button class='button hint-button' oncLick='goToHint();'><img src='medias/lightbulb_FILL0_wght400_GRAD0_opsz24.svg'/></button>
-                        <button class='button confirm-button' oncLick='confirmQuestion();'><img src='medias/send_FILL0_wght400_GRAD0_opsz24.svg' /></button>
+                        <button id='hint-button-none' class='button hint-button display-none' oncLick='goToHint();'><img src='medias/lightbulb_FILL0_wght400_GRAD0_opsz24.svg'/></button>
+                        <button id='confirm-button' class='button confirm-button' oncLick='confirmQuestion();'><img src='medias/send_FILL0_wght400_GRAD0_opsz24.svg' /></button>
                     </div>
-                    <div class='directional-buttons-panel'>
+                    <div class='directional-buttons-panel display-none'>
                         <button class='button directional-button' onclick='goToCardFirst();'><img src='medias/first_page_FILL0_wght400_GRAD0_opsz24.svg' /></button>
                         <button class='button directional-button' onclick='goToCardBefore();'><img src='medias/navigate_before_FILL0_wght400_GRAD0_opsz24.svg' /></button>
                         <button class='button directional-button' onclick='moveCardToLast();'><img src='medias/move_up_FILL0_wght400_GRAD0_opsz24.svg' style='transform: rotate(90deg);' /></button>
@@ -138,7 +137,10 @@
             </div>
         </section>
         <section id='screen-alert' class='screen-alert display-none'>
-            <div class='screen-alert-content'></div>
+            <div class='screen-alert-content screen-scroll'>
+                <div id='msg-alert' class='msg-alert'>Tela de Alerta</div>
+                <button class='alert-button button' onclick='killAlert();'>OK</button>
+            </div>
         </section>
     </main>
     <footer id='footer'>

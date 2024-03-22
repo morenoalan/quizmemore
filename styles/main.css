@@ -2,6 +2,7 @@
 @import url(./screen_editor.css);
 @import url(./screen_reader.css);
 @import url(./screen_player.css);
+@import url(./screen_alert.css);
 
 :root {
     --color-white: #ffffff;
@@ -13,13 +14,15 @@
     --color-black-96: #0a0a0a;
     --color-black: #000000;
     --color-light-green: #85ffa2;
+    --color-dark-green: #38804a;
     --color-light-red: #f99191;
+    --color-dark-red: #9a3d3d;
     --color-light-orange: #e9ad71;
     --color-light-blue: #84b2e1;
     --color-light-violet: #ba9bb9;
     --color-purple-plum: #292939;
     --color-purple-blueberry: #47475d;
-    --color-purple-jabuticaba: #5f5f80;    
+    --color-purple-jabuticaba: #5f5f80;
 
     --dim-max-screen: 31.25rem;/*500px*/
     --dim-min-screen: 20rem;/*320px*/

@@ -50,7 +50,7 @@
 .status-progress-bar-blue {
     border-right: 0.05rem solid var(--color-gray);
     height: 1rem;
-    width: 20%;
+    width: 50%;
     /*flex-grow: 1;*/
     background: var(--color-light-blue);
 }
@@ -95,6 +95,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    padding-top: 0.4rem;
     height: 3.5rem;
     width: 7rem;
     font-size: 0.85rem;
@@ -103,12 +104,12 @@
     color: var(--color-black);
 }
 
-#status-timer {
+#timer-display {
     font-size: 1.4rem;
     margin-bottom: -0.35rem;
 }
 
-.deck-table {
+.card-board {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -147,7 +148,7 @@
     font-size: 0.9rem;
 }
 
-.question-card {
+.card-question {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -162,7 +163,7 @@
     line-height: 1.4rem;
 }
 
-.answers-deck {
+.card-options {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -174,7 +175,7 @@
     background: transparent;
 }
 
-.answer-card {
+.answer-option {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -187,14 +188,14 @@
     cursor: pointer;
     transition: background 0.1s ease;
 }
-.answer-card[value='0']{
+.answer-option[value='0']{
     align-self: flex-start;
 }
-.answer-card[value='1']{
+.answer-option[value='1']{
     align-self: flex-end;
 }
 
-.answer-card:hover {
+.answer-option:hover {
     background: linear-gradient(-45deg, var(--color-purple-jabuticaba) 95%, var(--color-black-89));
 }
 
@@ -212,7 +213,7 @@
     background: #ffffff55;
 }
 
-.answer-card[value='1'] > .single-answer > span {
+.answer-option[value='1'] > .single-answer > span {
     position: relative;
     height: 0.3rem;
     width: 0.3rem;
@@ -233,7 +234,7 @@
     background: #ffffff55;
 }
 
-.answer-card[value='1'] > .multi-answer > span {
+.answer-option[value='1'] > .multi-answer > span {
     position: relative;
     height: 0.3rem;
     width: 0.3rem;
