@@ -1,4 +1,4 @@
-//LocalStorage
+// LocalStorage
 function handleLocalStorage(method, key, value){
     switch(method) {
         case 'get':
@@ -18,7 +18,7 @@ function handleLocalStorage(method, key, value){
     }
 }
 
-// General variables
+// Global variables
 
 const defaultNameFile = 'QUIZmeMORE.json';
 const programVersion = '0.0.0';
@@ -38,7 +38,7 @@ let jsonFile;
 let database = [];
 let filePaths = [];
 
-// global functions
+// Global functions
 
 function addElementHTML(idPlace, method, element){
     let setPlace = document.getElementById(idPlace);
@@ -68,7 +68,7 @@ function removeElementHTML(idElement){
     document.getElementById(idElement).remove();
 }
 
-// navigation
+// Navigation
 
 function goToScreen(nextScreen) {
     const appScreens = document.getElementById('main').getElementsByTagName('section');
@@ -82,7 +82,121 @@ function goToScreen(nextScreen) {
     modifyElementHTML(nextScreen, 'addClass', 'display-active');
 }
 
-// screen-editor and screen-reader
+// Screen-overture
+let fileName = defaultNameFile;
+
+function setFileName(nameTheFile){
+    fileName = nameTheFile;
+    fileName = fileName.replace(/\.[^.]*$/, '') + '.json';
+    if(fileName == '.json'){
+        fileName = defaultNameFile;
+    }
+    modifyElementHTML('file-input-button', 'textContent', fileName);
+    modifyElementHTML('menu-editor-file-name', 'textContent', fileName);
+    modifyElementHTML('menu-reader-file-name', 'textContent', fileName);
+}
+
+const maxPaths = 10;
+function setFilePaths(newPath){
+    if(filePaths.length > maxPaths - 1){
+        filePaths.shift();
+    }
+    if(filePaths.length < maxPaths){
+        filePaths.push(newPath);
+    }
+}
+
+function startFile(fileName) {
+    if(jsonFile == undefined){
+        jsonFile = newJsonFile;
+    }
+    setFileName(fileName);
+    updateFile();
+    modifyElementHTML('file-remove-button', 'removeClass', 'display-none');
+    modifyElementHTML('create-edit-button', 'textContent', 'EDITAR');modifyElementHTML('create-edit-button', 'onclick', 'readFile()');
+    undoEditId();
+}
+
+let fileInputField = document.getElementById('file-input-field');
+document.getElementById('file-input-field').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            jsonFile = JSON.parse(event.target.result);
+            database = jsonFile.database;
+            setFilePaths(fileInputField.value);
+            startFile(file.name);
+        };
+        reader.readAsText(file);
+    } else {
+        console.error('Nenhum arquivo selecionado.');
+    }
+});
+
+function goToOverture(){
+    goToScreen('screen-overture');
+}
+
+function goToGame(){
+    try {
+        if (database[0].id != '') {
+            goToScreen('screen-player');
+            startGame();
+        }
+    } catch (error) {
+        openAlert(1, 'Escolha um deck primeiro ou crie o seu próprio.');
+    }
+}
+
+function removeDatabase(element){
+    modifyElementHTML(element.id, 'addClass', 'display-none');
+    modifyElementHTML('file-input-field', 'value', '');
+    modifyElementHTML('create-edit-button', 'textContent', 'CRIAR');
+    modifyElementHTML('create-edit-button', 'onclick', 'createDatabase();');
+    setFileName(defaultNameFile);
+    modifyElementHTML('file-input-button', 'textContent', 'ESCOLHER DECK');
+    jsonFile = undefined;
+    database = [];
+}
+
+function createDatabase(){
+    goToScreen('screen-editor');
+    startFile(defaultNameFile);
+}
+
+// Screen-alert
+
+function openAlert(mode, msg){
+    modifyElementHTML('screen-alert', 'removeClass', 'display-none');
+    switch(mode){
+        case 1:
+            modifyElementHTML('screen-alert-model-1', 'removeClass', 'display-none');
+            modifyElementHTML('screen-alert-model-2', 'addClass', 'display-none');
+            modifyElementHTML('msg-alert-1', 'textContent', msg);
+            break;
+        case 2:
+            case 2:
+            modifyElementHTML('screen-alert-model-2', 'removeClass', 'display-none');
+            modifyElementHTML('screen-alert-model-1', 'addClass', 'display-none');
+            modifyElementHTML('msg-alert-2', 'textContent', msg);
+            break;
+    }
+}
+
+function killAlert(){
+    modifyElementHTML('screen-alert', 'addClass', 'display-none');
+}
+
+function permitAlert(msg, cmd){
+    let message = msg;
+    openAlert(2, message);
+    let command = cmd;
+    modifyElementHTML('permit-alert-button', 'onclick', command);
+}
+
+// Screen-editor and Screen-reader
 
 const originField = document.getElementById('form-field-origin');
 const topicField = document.getElementById('form-field-topic');
@@ -126,10 +240,24 @@ function newForm(){
 function deleteEmptyAnswers(){
     getAnswers();
     for(i = allAnswers.length-1; i >= 0; i--){
-        if(allAnswers[i].value.replace(/\W/g, '').replace(/\s/g, '') == ''){
+        if(allAnswers[i].value.replace(/[\W\s]/g, '') == ''){
             deleteAnswer(allAnswers[i]);
         }
     }
+}
+
+function undoEditId(){
+    idGen();
+    modifyElementHTML('form-button-id', 'textContent', `Id: ${newId}`);
+    modifyElementHTML('form-field-id', 'addClass', 'display-none');
+    modifyElementHTML('form-button-id', 'removeClass', 'display-none');
+}
+
+function editId(){
+    let msg = 'Se o campo Id permanecer em branco, será gerado um Id automaticamente. Se alterar o Id para algum já existente, irá sobrescrever e perder o correspondente armazenado. Deseja prosseguir?'
+    let cmd = `modifyElementHTML('form-button-id', 'addClass', 'display-none'); modifyElementHTML('form-field-id', 'removeClass', 'display-none'); modifyElementHTML('screen-alert', 'addClass', 'display-none');
+    modifyElementHTML('form-button-id', 'textContent', newId);`;
+    permitAlert(msg, cmd);
 }
 
 let newId;
@@ -160,7 +288,7 @@ function sendForm(){
         if(allAnswers[i].value){
             let j = i + 1;
             let keyAnswer = `${j}`;
-            if(allAnswers[i].value.replace(/\W/g, '').replace(/\s/g, '') != ''){
+            if(allAnswers[i].value.replace(/[\W\s]/g, '') != ''){
                 objectJSON['options'][keyAnswer] = allAnswers[i].value;
                 if(allAnswers[i].parentNode.firstElementChild.checked == true){
                     objectJSON['answers'].push(keyAnswer);
@@ -169,12 +297,16 @@ function sendForm(){
         }
     }
 
-    if(objectJSON['question'].replace(/\W/g, '').replace(/\s/g, '') == ''){
-        openAlert('Adicione uma questão válida.');
-    }else if(!Object.keys(objectJSON['options'][1])){
-        openAlert('Adicione, pelo menos, 2 respostas válidas.');
+    for(i = allAnswers.length; i < 4; i++){
+        addAnswer();
+    }
+
+    if(objectJSON['question'].replace(/[\W\s]/g, '') == ''){
+        openAlert(1, 'Adicione uma questão válida.');
+    }else if(!Object.keys(objectJSON['options'])[1]){
+        openAlert(1, 'Adicione, pelo menos, 2 respostas válidas.');
     }else if(!objectJSON['answers'][0]){
-        openAlert('Marque, pelo menos, 1 resposta como correta.');
+        openAlert(1, 'Marque, pelo menos, 1 resposta como correta.');
     }else{
         database.push(objectJSON);
         newForm();
@@ -286,7 +418,7 @@ function editObject(method, idObject){
     }
 }
 
-//screen-player
+// Screen-player
 
 let shuffledArray;
 
@@ -395,7 +527,7 @@ let statusPercent = "0%";
 function updatePlayerStatus(){
     statusProgress = String(countAdvance)+'/'+String(shuffledDatabase.length);
     statusProgressBar = (((countAdvance / shuffledDatabase.length) * 100).toFixed(0))+'%';
-    statusPercent = (((statusScore / (countAdvance-1)) * 100).toFixed(0))+'%';
+    statusPercent = isNaN(((statusScore / (countAdvance-1)) * 100).toFixed(0)) ? '0%' : (((statusScore / (countAdvance-1)) * 100).toFixed(0)) + '%';
     modifyElementHTML('status-score', 'textContent', statusScore);
     modifyElementHTML('status-progress', 'textContent', statusProgress);
     modifyElementHTML('status-percent', 'textContent', statusPercent);
@@ -407,6 +539,7 @@ function setPlayerStatus(){
     countAdvance = 0;
     statusScore = 0;
     statusProgress = "0/0";
+    statusProgressBar = "0%";
     statusPercent = "0%";
     updatePlayerStatus();
 }
@@ -432,8 +565,7 @@ function startGame(){
     playAndPause();
 }
 
-
-//screen-player bottom menu
+// Screen-player bottom-menu
 function goToHint(){
     return;
 }
@@ -491,7 +623,7 @@ function goToCardLast(){
     return;
 }
 
-// screen-player card movement
+// Screen-player card movements
 
 let numberCardOptions = 0;
 function numCardOptions(){
@@ -518,7 +650,8 @@ function selectOption(element) {
     }
 }
 
-// screen-player timer
+// Screen-player timer
+
 let timer;
 let timerStatus = false;
 let totalTime = 0;
@@ -557,96 +690,4 @@ function stopTimer(){
     pausedTime = 0;
 }
 
-// screen-overture
-let fileName = defaultNameFile;
-
-function setFileName(nameTheFile){
-    fileName = nameTheFile;
-    fileName = fileName.replace(/\.[^.]*$/, '') + '.json';
-    if(fileName == '.json'){
-        fileName = defaultNameFile;
-    }
-    modifyElementHTML('file-input-button', 'textContent', fileName);
-    modifyElementHTML('menu-editor-file-name', 'textContent', fileName);
-    modifyElementHTML('menu-reader-file-name', 'textContent', fileName);
-}
-
-const maxPaths = 10;
-function setFilePaths(newPath){
-    if(filePaths.length > maxPaths - 1){
-        filePaths.shift();
-    }
-    if(filePaths.length < maxPaths){
-        filePaths.push(newPath);
-    }
-}
-
-function startFile(fileName) {
-    if(jsonFile == undefined){
-        jsonFile = newJsonFile;
-    }
-    setFileName(fileName);
-    updateFile();
-    modifyElementHTML('file-remove-button', 'removeClass', 'display-none');
-    modifyElementHTML('create-edit-button', 'textContent', 'EDITAR');modifyElementHTML('create-edit-button', 'onclick', 'readFile()');
-}
-
-let fileInputField = document.getElementById('file-input-field');
-document.getElementById('file-input-field').addEventListener('change', function(event) {
-    const file = event.target.files[0];
-
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(event) {
-            jsonFile = JSON.parse(event.target.result);
-            database = jsonFile.database;
-            setFilePaths(fileInputField.value);
-            startFile(file.name);
-        };
-        reader.readAsText(file);
-    } else {
-        console.error('Nenhum arquivo selecionado.');
-    }
-});
-
-function goToOverture(){
-    goToScreen('screen-overture');
-}
-
-function goToGame(){
-    try {
-        if (database[0].id != '') {
-            goToScreen('screen-player');
-            startGame();
-        }
-    } catch (error) {
-        openAlert('Escolha um deck primeiro ou crie o seu próprio.');
-    }
-}
-
-function removeDatabase(element){
-    modifyElementHTML(element.id, 'addClass', 'display-none');
-    modifyElementHTML('file-input-field', 'value', '');
-    modifyElementHTML('create-edit-button', 'textContent', 'CRIAR');
-    modifyElementHTML('create-edit-button', 'onclick', 'createDatabase();');
-    setFileName(defaultNameFile);
-    modifyElementHTML('file-input-button', 'textContent', 'ESCOLHER DECK');
-    jsonFile = undefined;
-    database = [];
-}
-
-function createDatabase(){
-    goToScreen('screen-editor');
-    startFile(defaultNameFile);
-}
-
-// screen-alert
-
-function openAlert(msg){
-    modifyElementHTML('screen-alert', 'removeClass', 'display-none');
-    modifyElementHTML('msg-alert', 'textContent', msg);
-}
-
-function killAlert(){
-    modifyElementHTML('screen-alert', 'addClass', 'display-none');
-}
+//The End

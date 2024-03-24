@@ -176,9 +176,9 @@ figcaption {
 }
 
 @keyframes blink {
-    0% { background: currentColor; }
-    50% { background: #FFFF99; }
-    100% { background: currentColor; }
+    0% { opacity: 1; }
+    50% { opacity: 0.75; }
+    100% { opacity: 1; }
 }
 
 .blinking {

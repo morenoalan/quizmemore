@@ -41,7 +41,8 @@
     position: relative;
     margin-top: 2rem;
     height: 3rem;
-    min-width: 4rem;
+    padding: 0 1rem;
+    min-width: fit-content;
     width: 25%;
     border-radius: 0.3rem;
     font-size: 1rem;
@@ -51,6 +52,25 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: var(--color-light-violet);
     color: var(--color-black-89);
+}
+
+.alert-button-ok {
+    background: var(--color-light-violet);
+}
+
+.alert-button-go {
+    background: var(--color-light-green);
+}
+
+.alert-button-kill {
+    background: var(--color-light-red);
+}
+
+.alert-button-panel {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    column-gap: 1rem;
 }

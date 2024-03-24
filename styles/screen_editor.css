@@ -41,6 +41,19 @@
     padding-bottom: 2rem;
 }
 
+.form-button-id {
+    align-self: self-start;
+    height: 1.6rem;
+    width: fit-content;
+    margin-bottom: 0.5rem;
+    border-radius: 0.3rem;
+    padding: 0 1rem;
+    color: var(--color-white);
+    font-size: 1rem;
+    font-weight: 500;
+    background: var(--color-gray);
+}
+
 .screen-editor-form *::placeholder{
     font-family: 'Roboto', sans-serif;
     font-weight: 500;
@@ -105,6 +118,18 @@
     user-select: auto;
 }
 
+.div-field-tag {
+    display: inline;
+    word-wrap: break-word;
+    min-height: 2rem;
+    margin-bottom: -0.5rem;
+    cursor: text;
+    resize: none;
+    overflow-x: hidden;
+    overflow-y: auto;
+    user-select: auto;
+}
+
 #form-field-question:empty::before {
     content: "Questão";
     color: var(--color-gray);
@@ -121,6 +146,13 @@
 
 #form-field-explanation:empty::before {
     content: "Explicação (depois da resposta)";
+    color: var(--color-gray);
+    cursor: text;
+    font-weight: 500;
+}
+
+#form-field-tag:empty::before {
+    content: "Tags (filtros, por palavra)";
     color: var(--color-gray);
     cursor: text;
     font-weight: 500;

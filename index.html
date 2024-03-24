@@ -31,12 +31,12 @@
             <div class='screen-overture-content screen-scroll'>
                 <div class='overture-list'>
                     <div class='file-input-group'>
-                        <label id='file-input-button' for='file-input-field' class='button file-input-button overture-button'>ESCOLHER DECK</label>
+                        <label id='file-input-button' for='file-input-field' class='button file-input-button overture-button blinking'>ESCOLHER DECK</label>
                         <input type='file' id='file-input-field' accept='.json' class='display-none'>
                         <button id='file-remove-button' class='button overture-button file-remove-button display-none' onclick='removeDatabase(this);'><img src='medias/delete_FILL0_wght400_GRAD0_opsz24.svg' /></button>
                     </div>
-                    <button onclick='goToGame();' class='button overture-player-button overture-button'>JOGAR</button>
-                    <button id='create-edit-button' onclick='createDatabase();' class='button overture-editor-button overture-button'>CRIAR</button>
+                    <button onclick='goToGame();' class='button overture-player-button overture-button blinking'>JOGAR</button>
+                    <button id='create-edit-button' onclick='createDatabase();' class='button overture-editor-button overture-button blinking'>CRIAR</button>
                 </div>
             </div>
         </section>
@@ -49,6 +49,8 @@
             </div>
             <div class='screen-editor-content screen-scroll'>
                 <div class='screen-editor-form'>
+                    <button id='form-button-id' class='form-button-id button' onclick='editId();'>Id</button>
+                    <input id='form-field-id' type='number' placeholder='Id (apenas número)' class='input-field display-none' />
                     <input id='form-field-origin' type='text' placeholder='Origem' class='input-field'/>
                     <input id='form-field-topic' type='text' placeholder='Tópico' class='input-field'/>
                     <div id='form-field-question' role='textbox' placeholder='Questão' class='input-field div-field screen-scroll' contenteditable='true'></div>
@@ -76,6 +78,7 @@
                     <button id='form-button-add-answer' class='add-answer button' onclick='addAnswer();'>+</button>
                     <div id='form-field-hint' role='textbox' placeholder='Dica (antes da resposta)' class='input-field div-field screen-scroll' contenteditable='true'></div>
                     <div id='form-field-explanation' role='textbox' placeholder='Explicação (depois da resposta)' class='input-field div-field screen-scroll' contenteditable='true'></div>
+                    <div id='form-field-tag' role='textbox' placeholder='Tags (filtros, por palavra)' class='input-field div-field-tag screen-scroll' contenteditable='true'></div>
                 </div>
             </div>
             <div class='menu-editor-bottom'>
@@ -137,9 +140,16 @@
             </div>
         </section>
         <section id='screen-alert' class='screen-alert display-none'>
-            <div class='screen-alert-content screen-scroll'>
-                <div id='msg-alert' class='msg-alert'>Tela de Alerta</div>
-                <button class='alert-button button' onclick='killAlert();'>OK</button>
+            <div id='screen-alert-model-1' class='screen-alert-content screen-scroll'>
+                <div id='msg-alert-1' class='msg-alert'>Modelo de Alerta 1</div>
+                <button class='alert-button alert-button-ok button' onclick='killAlert();'>OK</button>
+            </div>
+            <div id='screen-alert-model-2' class='screen-alert-content screen-scroll display-none'>
+                <div id='msg-alert-2' class='msg-alert'>Modelo de Alerta 2</div>
+                <div class='alert-button-panel'>
+                    <button class='alert-button alert-button-kill button' onclick='killAlert();'>Cancelar</button>
+                    <button id='permit-alert-button' class='alert-button alert-button-go button' onclick='permitAlert();'>Prosseguir</button>
+                </div>
             </div>
         </section>
     </main>
