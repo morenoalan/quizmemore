@@ -91,7 +91,7 @@ function setFileName(nameTheFile){
     if(fileName == '.json'){
         fileName = defaultNameFile;
     }
-    modifyElementHTML('file-input-button', 'textContent', fileName);
+    modifyElementHTML('file-input-button-span', 'textContent', fileName);
     modifyElementHTML('menu-editor-file-name', 'textContent', fileName);
     modifyElementHTML('menu-reader-file-name', 'textContent', fileName);
 }
@@ -164,6 +164,10 @@ function removeDatabase(element){
 function createDatabase(){
     goToScreen('screen-editor');
     startFile(defaultNameFile);
+}
+
+function moreFile(){
+    return;
 }
 
 // Screen-alert

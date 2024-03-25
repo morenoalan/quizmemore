@@ -31,12 +31,13 @@
             <div class='screen-overture-content screen-scroll'>
                 <div class='overture-list'>
                     <div class='file-input-group'>
-                        <label id='file-input-button' for='file-input-field' class='button file-input-button overture-button blinking'>ESCOLHER DECK</label>
+                        <label id='file-input-button' for='file-input-field' class='button file-input-button overture-button'><span id='file-input-button-span'>ESCOLHER DECK</span></label>
                         <input type='file' id='file-input-field' accept='.json' class='display-none'>
+                        <button id='file-more-button' class='button overture-button file-more-button' onclick='moreFile();'><img src='medias/expand_more_FILL0_wght400_GRAD0_opsz24.svg' /></button>
                         <button id='file-remove-button' class='button overture-button file-remove-button display-none' onclick='removeDatabase(this);'><img src='medias/delete_FILL0_wght400_GRAD0_opsz24.svg' /></button>
                     </div>
-                    <button onclick='goToGame();' class='button overture-player-button overture-button blinking'>JOGAR</button>
-                    <button id='create-edit-button' onclick='createDatabase();' class='button overture-editor-button overture-button blinking'>CRIAR</button>
+                    <button onclick='goToGame();' class='button overture-player-button overture-button'>JOGAR</button>
+                    <button id='create-edit-button' onclick='createDatabase();' class='button overture-editor-button overture-button'>CRIAR</button>
                 </div>
             </div>
         </section>

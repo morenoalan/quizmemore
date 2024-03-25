@@ -54,6 +54,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    color: var(--color-black-89);
 }
 
 .file-input-group {
@@ -69,22 +70,37 @@
 
 .file-input-button {
     background: var(--color-light-orange);
-    color: var(--color-black-89);
     flex-grow: 1;
+    padding: 0 1rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.file-input-button > span {
+    max-width: 80%;
+    display: inline-block;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.file-more-button {
+    background-color: var(--color-light-orange);
+    width: 17.6%
 }
 
 .file-remove-button {
     background: var(--color-light-red);
-    color: var(--color-black-89);
     width: 17.6%
 }
 
 .overture-player-button {
     background: var(--color-light-green);
-    color: var(--color-black-89);
 }
 
 .overture-editor-button {
     background: var(--color-light-blue);
-    color: var(--color-black-89);
 }
