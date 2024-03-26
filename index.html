@@ -33,8 +33,8 @@
                     <div class='file-input-group'>
                         <label id='file-input-button' for='file-input-field' class='button file-input-button overture-button'><span id='file-input-button-span'>ESCOLHER DECK</span></label>
                         <input type='file' id='file-input-field' accept='.json' class='display-none'>
-                        <button id='file-more-button' class='button overture-button file-more-button' onclick='moreFile();'><img src='medias/expand_more_FILL0_wght400_GRAD0_opsz24.svg' /></button>
-                        <button id='file-remove-button' class='button overture-button file-remove-button display-none' onclick='removeDatabase(this);'><img src='medias/delete_FILL0_wght400_GRAD0_opsz24.svg' /></button>
+                        <button id='file-more-button' class='button overture-button file-more-button display-none' onclick='moreFile();'><img src='medias/expand_more_FILL0_wght400_GRAD0_opsz24.svg' /></button>
+                        <button id='file-remove-button' class='button overture-button file-remove-button display-none' onclick='removeDatabase();'><img src='medias/delete_FILL0_wght400_GRAD0_opsz24.svg' /></button>
                     </div>
                     <button onclick='goToGame();' class='button overture-player-button overture-button'>JOGAR</button>
                     <button id='create-edit-button' onclick='createDatabase();' class='button overture-editor-button overture-button'>CRIAR</button>
@@ -103,12 +103,12 @@
             <div class='screen-player-content'>
                 <div id='player-status' class='player-status'>
                     <div class='player-status-info'>
-                        <div class='player-status-right'>
+                        <div class='player-status-right-inline'>
                             <p class='player-status-data'>ACERTOS: <span id='status-score'>1</span></p>
                             <p class='player-status-data'>PROGRESSO: <span id='status-progress'>2/10 </span></p>
                             <p class='player-status-data'>APROVEITAMENTO: <span id='status-percent'>100%</span></p>
                         </div>
-                        <button class='button play-pause-button' onclick='playAndPause();'><p id='timer-display'>01:23</p><img src='medias/play_pause_FILL0_wght400_GRAD0_opsz24.svg' /></button>
+                        <button class='button play-pause-button display-none' onclick='playAndPause();'><p id='timer-display'>01:23</p><img src='medias/play_pause_FILL0_wght400_GRAD0_opsz24.svg' /></button>
                     </div>
                     <div class='status-progress-bar'>
                         <div id='status-progress-bar-blue' class='status-progress-bar-blue'></div>
@@ -124,6 +124,14 @@
                         <p class='answer-option answer-right' onclick='selectOption(this);' value='0'><span class='single-answer'><span></span></span>Sexo, drogas e rock'n'roll</p>
                     </div>
                     <p id='card-info-origin' class='card-info-origin'>ORIGEM: <span id='card-info-origin-span'>Douglas Addams</span></p>
+                </div>
+                <div id='note-board' class='note-board screen-scroll display-none'>
+                    <div id='note-board-msg' class='note-board-msg'>Saudações de QUIZmeMORE.</div>
+                    <div class='note-board-status display-none'>
+                        <p class='player-status-data'>ACERTOS: <span id='note-board-status-score'>1</span></p>
+                        <p class='player-status-data'>TOTAL DE QUESTÕES: <span id='note-board-status-total'>10</span></p>
+                        <p class='player-status-data'>APROVEITAMENTO: <span id='note-board-status-percent'>100%</span></p>
+                    </div>
                 </div>
                 <div class='menu-player-bottom'>
                     <div class='menu-player-hint-confirm'>

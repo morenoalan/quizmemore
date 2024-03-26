@@ -82,6 +82,15 @@
     line-height: 1.2rem;
 }
 
+.player-status-right-inline {
+    line-height: 1.2rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
 .player-status-data {
     font-size: 0.7rem;
 }
@@ -252,6 +261,40 @@
     padding-bottom: 0.3rem;
     margin-bottom: 0.5rem;
     background-color: transparent;
+}
+
+.note-board {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    position: relative;
+    row-gap: 0.5rem;
+    padding-right: 0.5rem;
+    background: transparent;
+    resize: none;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+.note-board-msg {
+    text-justify: center;
+    text-align: center;
+    font: 2rem;
+    font-weight: 500;
+    color: var(--color-gray-fns);
+}
+
+.note-board-status {
+    line-height: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: fit-content;
 }
 
 .menu-player-hint-confirm{

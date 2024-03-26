@@ -76,10 +76,10 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
 }
 
 .file-input-button > span {
-    max-width: 80%;
     display: inline-block;
     text-align: left;
     white-space: nowrap;

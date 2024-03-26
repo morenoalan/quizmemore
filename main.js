@@ -68,7 +68,7 @@ function removeElementHTML(idElement){
     document.getElementById(idElement).remove();
 }
 
-// Navigation
+// Global navigation
 
 function goToScreen(nextScreen) {
     const appScreens = document.getElementById('main').getElementsByTagName('section');
@@ -124,14 +124,28 @@ document.getElementById('file-input-field').addEventListener('change', function(
     if (file) {
         const reader = new FileReader();
         reader.onload = function(event) {
-            jsonFile = JSON.parse(event.target.result);
+            try{
+                jsonFile = JSON.parse(event.target.result);
+            }catch(error){
+                openAlert(1, 'Erro (QMM002): Falha na leitura do arquivo.');
+                removeDatabase();
+                return;
+            }
             database = jsonFile.database;
+            if(!database || database == null || database == undefined){
+                openAlert(1, 'Erro (QMM003): Este arquivo não possui dados válidos.');
+                removeDatabase();
+                return;
+            }else if(database == ''){                
+                openAlert(1, 'Este arquivo está vazio. Mas você pode editá-lo.');
+            }
             setFilePaths(fileInputField.value);
             startFile(file.name);
         };
         reader.readAsText(file);
     } else {
-        console.error('Nenhum arquivo selecionado.');
+        openAlert(1, 'Erro (QMM001): Falha no carregamento do arquivo.');
+        removeDatabase();
     }
 });
 
@@ -150,13 +164,13 @@ function goToGame(){
     }
 }
 
-function removeDatabase(element){
-    modifyElementHTML(element.id, 'addClass', 'display-none');
+function removeDatabase(){
+    modifyElementHTML('file-remove-button', 'addClass', 'display-none');
     modifyElementHTML('file-input-field', 'value', '');
     modifyElementHTML('create-edit-button', 'textContent', 'CRIAR');
     modifyElementHTML('create-edit-button', 'onclick', 'createDatabase();');
     setFileName(defaultNameFile);
-    modifyElementHTML('file-input-button', 'textContent', 'ESCOLHER DECK');
+    modifyElementHTML('file-input-button-span', 'textContent', 'ESCOLHER DECK');
     jsonFile = undefined;
     database = [];
 }
@@ -317,8 +331,6 @@ function sendForm(){
     }
 }
 
-
-
 function readFile(){
     goToScreen('screen-reader');
 
@@ -357,38 +369,6 @@ function saveFile(){
     URL.revokeObjectURL(url);
 }
 
-/*
-function createAndCopyJSONToClipboard(object) {
-    const jsonString = JSON.stringify(object, null, 2);
-    const blob = new Blob([jsonString], { type: 'application/json' });
-    const file = new File([blob], fileName);
-
-    const reader = new FileReader();
-    reader.onload = function(event) {
-        navigator.clipboard.writeText(event.target.result)
-            .then(() => {
-                console.log('Arquivo JSON copiado para a área de transferência. Cole-o no WhatsApp.');
-            })
-            .catch(err => {
-                console.error('Erro ao copiar arquivo JSON para a área de transferência:', err);
-                console.log('Erro ao copiar arquivo JSON para a área de transferência. Por favor, copie manualmente.');
-            });
-    };
-    reader.readAsText(file);
-}
-
-function openWhatsApp() {
-    const whatsappUrl = 'https://web.whatsapp.com/';
-    window.open(whatsappUrl, '_blank');
-}
-
-function shareFile(){
-    updateFile();
-    createAndCopyJSONToClipboard(jsonFile);
-    openWhatsApp();
-}
-*/
-
 function deleteObject(idObject){
     database = database.filter((object) => object.id !== String(idObject));
     readFile();
@@ -425,6 +405,7 @@ function editObject(method, idObject){
 // Screen-player
 
 let shuffledArray;
+let stepNextQuestion = false;
 
 function orderRandomly(quantity) {
     let elements = [];
@@ -522,31 +503,99 @@ function createCard(){
 
 }
 
-let countAdvance = 0;
+let shuffledDatabase;
+function startGame(){
+    orderRandomly(database.length);
+    shuffledDatabase = shuffledArray;
+    createCard();
+    startPlayerStatus();
+    currentCard = 1;
+    updatePlayerStatus();
+    //setPanelButtons(); //HTML button com id trocado para desabilitar
+    document.getElementById('timer-display').textContent = '00:00';
+    playAndPause();
+}
+
+// Screen-player score
+
 let statusScore = 0;
 let statusProgress = "0/0";
 let statusProgressBar = "0%";
 let statusPercent = "0%";
 
 function updatePlayerStatus(){
-    statusProgress = String(countAdvance)+'/'+String(shuffledDatabase.length);
-    statusProgressBar = (((countAdvance / shuffledDatabase.length) * 100).toFixed(0))+'%';
-    statusPercent = isNaN(((statusScore / (countAdvance-1)) * 100).toFixed(0)) ? '0%' : (((statusScore / (countAdvance-1)) * 100).toFixed(0)) + '%';
+    statusProgress = String(currentCard)+'/'+String(shuffledDatabase.length);
+    statusProgressBar = (((currentCard / shuffledDatabase.length) * 100).toFixed(0))+'%';
+    statusPercent = isNaN(((statusScore / (currentCard-1)) * 100).toFixed(0)) ? '0%' : (((statusScore / (currentCard-1)) * 100).toFixed(0)) + '%';
     modifyElementHTML('status-score', 'textContent', statusScore);
     modifyElementHTML('status-progress', 'textContent', statusProgress);
     modifyElementHTML('status-percent', 'textContent', statusPercent);
     modifyElementHTML('status-progress-bar-blue', 'style', `width:${statusProgressBar};`);
 }
 
-function setPlayerStatus(){
+function startPlayerStatus(){
     stopTimer();
-    countAdvance = 0;
+    currentCard = 0;
     statusScore = 0;
     statusProgress = "0/0";
     statusProgressBar = "0%";
     statusPercent = "0%";
     updatePlayerStatus();
 }
+
+
+// Screen-player note board
+
+let finishMsgs = {
+    100: 'Você foi perfeito!',
+    90: 'Uma mente brilhante!',
+    80: 'Você tem talento para a coisa!',
+    70: 'Os ventos da boa sorte te guiam!',
+    60: 'Você pode melhorar, bote fé!',
+    50: 'Ruim não tá, mas bom também não.',
+    40: 'A solução é estudar mais.',
+    30: 'Assim tá difícil, meu amigo!',
+    20: 'É isso o quê você está fazendo da sua vida?',
+    10: 'A esperança é a última que morre!',
+    0: 'Como é que pode uma coisa dessa?!'
+}
+
+function getFinishMsgs() {
+    let pickMsg = null;
+    for (let i = 0; i < finishMsgs.length; i++) {
+        if (finishMsgs[i] <= statusPercent) {
+            if (pickMsg === null || array[i] > pickMsg) {
+                pickMsg = array[i];
+            }
+        }
+    }
+    return finishMsgs[pickMsg];
+}
+
+function closeNoteBoard(){
+    modifyElementHTML('note-board', 'addClass', 'display-none');
+    modifyElementHTML('note-board-status', 'addClass', 'display-none');
+    modifyElementHTML('player-status', 'removeClass', 'display-none');
+    modifyElementHTML('card-board', 'removeClass', 'display-none');
+}
+
+function openNoteBoard(msg){
+    modifyElementHTML('player-status', 'addClass', 'display-none');
+    modifyElementHTML('card-board', 'addClass', 'display-none');
+    modifyElementHTML('note-board', 'removeClass', 'display-none');
+    if(msg=='status-game-finished'){
+        modifyElementHTML('note-board-status', 'removeClass', 'display-none');
+        let newMsg = getFinishMsgs();
+        modifyElementHTML('note-board-msg', 'textContent', newMsg);
+        modifyElementHTML('note-board-status-score', 'textContent', statusScore);
+        modifyElementHTML('note-board-status-total', 'textContent', shuffledDatabase.length);
+        modifyElementHTML('note-board-status-percent', 'textContent', statusPercent);
+    }else{
+        modifyElementHTML('note-board-msg', 'textContent', msg);
+    }
+}
+
+// Screen-player deck navigation
 
 function setPanelButtons(){
     if(objectCardHints === '' || objectCardHints === undefined){
@@ -556,20 +605,6 @@ function setPanelButtons(){
     }
 }
 
-let shuffledDatabase;
-function startGame(){
-    orderRandomly(database.length);
-    shuffledDatabase = shuffledArray;
-    createCard();
-    setPlayerStatus();
-    countAdvance = 1;
-    updatePlayerStatus();
-    //setPanelButtons(); //HTML button com id trocado para desabilitar
-    document.getElementById('timer-display').textContent = '00:00';
-    playAndPause();
-}
-
-// Screen-player bottom-menu
 function goToHint(){
     return;
 }
@@ -577,7 +612,7 @@ function goToHint(){
 let answerOptions = document.getElementsByClassName('answer-option');
 let countCorrectAnswers;
 
-function confirmQuestion(){
+function validateQuestion(){
     console.log(answerOptions.length);
     countCorrectAnswers = 0;
     console.log(countCorrectAnswers);
@@ -603,8 +638,34 @@ function confirmQuestion(){
         statusScore++;
     }
 
-    countAdvance++;
     updatePlayerStatus();
+    modifyElementHTML('confirm-button', 'addClass', 'bright');
+    stepNextQuestion = true;
+}
+
+function nextQuestion(){
+    modifyElementHTML('confirm-button', 'removeClass', 'bright');
+    currentCard++;
+    updatePlayerStatus();
+    console.log(currentCard +', ' + shuffledDatabase.length);
+    if(currentCard > shuffledDatabase.length){
+        openNoteBoard('status-game-finished');
+    }else{
+        createCard();
+    }
+    stepNextQuestion = false;
+}
+
+function confirmQuestion(){
+    switch(stepNextQuestion) {
+        case false:
+            validateQuestion();
+            break;
+        case true:
+            nextQuestion();
+            break;
+    }
+    
 }
 
 function goToExplanation(){
@@ -694,4 +755,4 @@ function stopTimer(){
     pausedTime = 0;
 }
 
-//The End
+// The End
