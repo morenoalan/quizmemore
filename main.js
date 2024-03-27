@@ -656,14 +656,37 @@ function nextQuestion(){
     stepNextQuestion = false;
 }
 
+let countMarkedAnswers = 0;
+function quantifyMarkedAnswers(){
+    countMarkedAnswers = 0;
+    for(let i = 0; answerOptions.length > i; i++){
+        if(answerOptions[i].getAttribute('value') == 1){
+            countMarkedAnswers++;
+        }
+    }
+}
+
 function confirmQuestion(){
-    switch(stepNextQuestion) {
-        case false:
-            validateQuestion();
-            break;
-        case true:
-            nextQuestion();
-            break;
+    quantifyMarkedAnswers();
+    if(countMarkedAnswers == objectCardAnswers.length){
+        countMarkedAnswers = 0;
+        switch(stepNextQuestion) {
+            case false:
+                validateQuestion();
+                break;
+            case true:
+                nextQuestion();
+                break;
+        }
+    }else{
+        switch(objectCardAnswers.length){
+            case 1:
+                openAlert(1, 'Você precisa selecionar 1 alternativa para prosseguir.');
+                break;
+            default:
+                openAlert(1, `Você precisa selecionar ${objectCardAnswers.length} alternativas para prosseguir.`);
+                break;
+        }
     }
     
 }
