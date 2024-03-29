@@ -463,7 +463,7 @@ let shuffledObjectCardOptions;
 
 function createCard(){
     blankCard();
-    objectCard = database[shuffledDatabase[currentCard]-1];
+    objectCard = database[shuffledDatabase[currentCard]-1]; //bug is happening here about currentCard
 
     const objectCardTopic = objectCard.topic;
     if(objectCardTopic){
