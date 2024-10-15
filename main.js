@@ -253,6 +253,7 @@ function newForm(){
     for(i = 0; i < 4; i++){
         addAnswer();
     }
+    undoEditId();
 }
 
 function deleteEmptyAnswers(){
@@ -264,17 +265,16 @@ function deleteEmptyAnswers(){
     }
 }
 
-function undoEditId(){
+function undoEditId() {
     idGen();
     modifyElementHTML('form-button-id', 'textContent', `Id: ${newId}`);
     modifyElementHTML('form-field-id', 'addClass', 'display-none');
     modifyElementHTML('form-button-id', 'removeClass', 'display-none');
 }
 
-function editId(){
+function editId() {
     let msg = 'Se o campo Id permanecer em branco, será gerado um Id automaticamente. Se alterar o Id para algum já existente, irá sobrescrever e perder o correspondente armazenado. Deseja prosseguir?'
-    let cmd = `modifyElementHTML('form-button-id', 'addClass', 'display-none'); modifyElementHTML('form-field-id', 'removeClass', 'display-none'); modifyElementHTML('screen-alert', 'addClass', 'display-none');
-    modifyElementHTML('form-button-id', 'textContent', newId);`;
+    let cmd = `modifyElementHTML('form-button-id', 'addClass', 'display-none'); modifyElementHTML('form-field-id', 'removeClass', 'display-none'); modifyElementHTML('screen-alert', 'addClass', 'display-none'); modifyElementHTML('form-button-id', 'textContent', newId);`;
     permitAlert(msg, cmd);
 }
 
